@@ -9,8 +9,8 @@ module.exports = async (req, res) => {
     return res.status(405).send("Method Not Allowed");
   }
 
-  const MERCHANT_KEY = "IAaXBo";
-  const SALT = "HUZnR2ZwvvareYCbhlhpQeA9uZQdgB6m";
+  const MERCHANT_KEY = "YKRk0D";
+  const SALT = "XtAdz5qqGHM1TPSUFHf21hqBZzbMrctL";
 
   const body =
 typeof req.body === "string"
