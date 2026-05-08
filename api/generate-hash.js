@@ -22,28 +22,28 @@ const { planid } = body;
   let amount = "";
   let productinfo = "";
 
-  if (planid === "CONSULT") {
-    amount = "1000.00";
+  if (planid === "CONSULTATION") {
+    amount = "10";
     productinfo = "Consultation Fee";
   }
 
   else if (planid === "2MTP") {
-    amount = "3400.00";
+    amount = "3400";
     productinfo = "2 Months Treatment Plan";
   }
 
   else if (planid === "4MTP") {
-    amount = "5200.00";
+    amount = "5200";
     productinfo = "4 Months Treatment Plan";
   }
 
   else if (planid === "6MTP") {
-    amount = "7200.00";
+    amount = "7200";
     productinfo = "6 Months Treatment Plan";
   }
 
   else if (planid === "12MTP") {
-    amount = "10800.00";
+    amount = "10800";
     productinfo = "12 Months Treatment Plan";
   }
 
