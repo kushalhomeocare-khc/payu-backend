@@ -12,7 +12,12 @@ module.exports = async (req, res) => {
   const MERCHANT_KEY = "IAaXBo";
   const SALT = "HUZnR2ZwvvareYCbhlhpQeA9uZQdgB6m";
 
-  const { planid } = req.body;
+  const body =
+typeof req.body === "string"
+? JSON.parse(req.body)
+: req.body;
+
+const { planid } = body;
 
   let amount = "";
   let productinfo = "";
