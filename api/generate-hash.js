@@ -23,7 +23,7 @@ const { planid } = body;
   let productinfo = "";
 
   if (planid === "CONSULTATION") {
-    amount = "10";
+    amount = "1000";
     productinfo = "Consultation Fee";
   }
 
@@ -72,13 +72,13 @@ let furl = "";
 
 if (planid === "CONSULTATION") {
 
-  surl = "https://kushalonline.com/consult-success";
-  furl = "https://kushalonline.com/payment-failure";
+  surl = "https://payu-backend-ruby.vercel.app/consult-success";
+  furl = "https://payu-backend-ruby.vercel.app/payment-failure";
 
 } else {
 
-  surl = "https://kushalonline.com/payment-success";
-  furl = "https://kushalonline.com/payment-failure";
+  surl = "https://payu-backend-ruby.vercel.app/payment-success";
+  furl = "https://payu-backend-ruby.vercel.app/payment-failure";
 
 }
 
