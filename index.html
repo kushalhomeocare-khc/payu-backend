@@ -26,7 +26,7 @@
 </head>
 
 <body
-onload="startPayment()"
+
 style="
 margin:0;
 background:#f5f5f5;
@@ -104,7 +104,15 @@ Please wait while we connect you securely to the payment gateway.
 </form>
 
 <script>
+window.onload = function () {
 
+setTimeout(() => {
+
+startPayment();
+
+}, 1000);
+
+};
 async function startPayment() {
 
 const params = new URLSearchParams(window.location.search);
