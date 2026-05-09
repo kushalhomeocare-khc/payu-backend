@@ -97,10 +97,10 @@ Please wait while we connect you securely to the payment gateway.
 <input type="hidden" name="phone" id="phone">
 
 <input type="hidden" name="surl"
-value="https://payu-backend.vercel.app/consult-success.html">
+value="https://payu-backend-ruby.vercel.app/consult-success.html">
 
 <input type="hidden" name="furl"
-value="https://payu-backend.vercel.app/consult-failure.html">
+value="https://payu-backend-ruby.vercel.app/consult-failure.html">
 
 <input type="hidden" name="hash" id="hash">
 
@@ -128,7 +128,7 @@ document.getElementById("email").value = patientEmail;
 
 document.getElementById("phone").value = patientPhone;
 
-const response = await fetch("/api/generate-hash", {
+const response = await fetch("https://payu-backend-ruby.vercel.app/api/generate-hash", {
 
 method: "POST",
 
