@@ -80,7 +80,31 @@ margin:auto;
 ">
 Please wait while we connect you securely to the payment gateway.
 </p>
-
+<button
+onclick="startPayment()"
+style="
+background:#12cfff;
+color:#000000;
+border:none;
+width:90%;
+max-width:700px;
+padding:22px 20px;
+font-size:20px;
+font-family:'Poppins',sans-serif;
+font-weight:700;
+letter-spacing:1px;
+border-radius:60px;
+margin-top:40px;
+cursor:pointer;
+box-shadow:0 6px 18px rgba(0,0,0,0.12);
+display:block;
+margin-left:auto;
+margin-right:auto;
+text-transform:uppercase;
+">
+Proceed to Secure Payment
+</button>
+  
 </div>
 
 <form id="payuForm" method="post">
@@ -104,15 +128,7 @@ Please wait while we connect you securely to the payment gateway.
 </form>
 
 <script>
-window.onload = function () {
 
-setTimeout(() => {
-
-startPayment();
-
-}, 1000);
-
-};
 async function startPayment() {
 
 const params = new URLSearchParams(window.location.search);
