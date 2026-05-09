@@ -5,132 +5,234 @@
 
 <title>Kushal Online Payment</title>
 
-<style>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 
-body{
-font-family:Arial;
-padding:40px;
-text-align:center;
-background:#f5f5f5;
-}
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 
-h1{
-margin-bottom:30px;
-}
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 
-button{
+<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
 
-width:300px;
-padding:18px;
-margin:10px;
-font-size:18px;
-border:none;
-border-radius:10px;
-background:#0f766e;
-color:white;
-cursor:pointer;
+<link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
 
-}
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
-button:hover{
-opacity:0.9;
-}
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
 </head>
 
-<body>
+<body
+onload="startPayment()"
+style="
+margin:0;
+background:#f5f5f5;
+font-family:'Poppins',sans-serif;
+color:#000000;
+">
 
-<h1>Kushal Online Payment</h1>
+<div
+style="
+height:24px;
+background:#12cfff;
+width:100%;
+">
+</div>
+
+<div
+style="
+text-align:center;
+margin-top:70px;
+padding:20px;
+">
+
+<img
+src="logo.png"
+style="
+width:180px;
+max-width:80%;
+margin-bottom:30px;
+">
+
+<h2
+style="
+font-family:'Oswald',sans-serif;
+color:#12cfff;
+font-weight:600;
+font-size:34px;
+letter-spacing:0.5px;
+margin-bottom:12px;
+">
+Redirecting to Secure Payment...
+</h2>
+
+<p
+style="
+font-family:'Poppins',sans-serif;
+color:#000000;
+font-size:15px;
+line-height:1.6;
+max-width:420px;
+margin:auto;
+">
+Please wait while we connect you securely to the payment gateway.
+</p>
+
+</div>
 
 <form id="payuForm" method="post">
 
-<input type="hidden" name="key" id="key">
+<input type="hidden" name="key" value="IAaXBo">
+
 <input type="hidden" name="txnid" id="txnid">
+
 <input type="hidden" name="amount" id="amount">
+
 <input type="hidden" name="productinfo" id="productinfo">
-<input type="hidden" name="firstname" id="firstname">
-<input type="hidden" name="email" id="email">
-<input type="hidden" name="phone" id="phone">
-<input type="hidden" name="hash" id="hash">
+
+<input type="hidden" name="firstname" value="Patient">
+
 <input type="hidden" name="surl" id="surl">
+
 <input type="hidden" name="furl" id="furl">
 
-<button type="button" onclick="startPayment('CONSULTATION')">
-Consultation Fee ₹1000
-</button>
-
-<br>
-
-<button type="button" onclick="startPayment('2MTP')">
-2 MTP ₹3400
-</button>
-
-<br>
-
-<button type="button" onclick="startPayment('4MTP')">
-4 MTP ₹5200
-</button>
-
-<br>
-
-<button type="button" onclick="startPayment('6MTP')">
-6 MTP ₹7200
-</button>
-
-<br>
-
-<button type="button" onclick="startPayment('12MTP')">
-12 MTP ₹10800
-</button>
+<input type="hidden" name="hash" id="hash">
 
 </form>
 
 <script>
 
-async function startPayment(planid) {
+async function startPayment() {
 
-try {
+const params = new URLSearchParams(window.location.search);
+
+const plan = params.get("plan");
+
+let amount = "";
+let productinfo = "";
+let surl = "";
+let furl = "";
+
+if(plan === "consult") {
+
+amount = "1000";
+productinfo = "Consultation Fee";
+
+surl =
+"https://payu-backend-ruby.vercel.app/consult-success.html";
+
+furl =
+"https://payu-backend-ruby.vercel.app/consult-failure.html";
+
+}
+
+else if(plan === "2mtp") {
+
+amount = "3400";
+productinfo = "2 Month Treatment Plan";
+
+surl =
+"https://payu-backend-ruby.vercel.app/treatment-success.html";
+
+furl =
+"https://payu-backend-ruby.vercel.app/treatment-failure.html";
+
+}
+
+else if(plan === "4mtp") {
+
+amount = "5200";
+productinfo = "4 Month Treatment Plan";
+
+surl =
+"https://payu-backend-ruby.vercel.app/treatment-success.html";
+
+furl =
+"https://payu-backend-ruby.vercel.app/treatment-failure.html";
+
+}
+
+else if(plan === "6mtp") {
+
+amount = "7200";
+productinfo = "6 Month Treatment Plan";
+
+surl =
+"https://payu-backend-ruby.vercel.app/treatment-success.html";
+
+furl =
+"https://payu-backend-ruby.vercel.app/treatment-failure.html";
+
+}
+
+else if(plan === "12mtp") {
+
+amount = "10800";
+productinfo = "12 Month Treatment Plan";
+
+surl =
+"https://payu-backend-ruby.vercel.app/treatment-success.html";
+
+furl =
+"https://payu-backend-ruby.vercel.app/treatment-failure.html";
+
+}
+
+else {
+
+alert("Invalid plan selected");
+
+return;
+
+}
+
+document.getElementById("amount").value = amount;
+
+document.getElementById("productinfo").value = productinfo;
+
+document.getElementById("surl").value = surl;
+
+document.getElementById("furl").value = furl;
+
+const txnid = "TXN" + Date.now();
+
+document.getElementById("txnid").value = txnid;
 
 const response = await fetch(
-"/api/generate-hash",
+"https://payu-backend-ruby.vercel.app/api/generate-hash",
 {
+
 method: "POST",
+
 headers: {
 "Content-Type": "application/json"
 },
+
 body: JSON.stringify({
-planid: planid
+
+txnid: txnid,
+
+amount: amount,
+
+productinfo: productinfo,
+
+firstname: "Patient"
+
 })
-}
-);
+
+});
 
 const data = await response.json();
 
-document.getElementById("key").value = data.key;
-document.getElementById("txnid").value = data.txnid;
-document.getElementById("amount").value = data.amount;
-document.getElementById("productinfo").value = data.productinfo;
-document.getElementById("firstname").value = data.firstname;
-document.getElementById("email").value = data.email;
-document.getElementById("phone").value = data.phone;
 document.getElementById("hash").value = data.hash;
-document.getElementById("surl").value = data.surl;
-document.getElementById("furl").value = data.furl;
 
 document.getElementById("payuForm").action =
 "https://secure.payu.in/_payment";
 
 document.getElementById("payuForm").submit();
-
-}
-
-catch(error){
-
-alert("Something went wrong");
-
-}
 
 }
 
