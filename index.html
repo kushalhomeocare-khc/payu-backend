@@ -70,18 +70,9 @@ Redirecting to Secure Payment...
 </h2>
 
 <p
-style="
-font-family:'Poppins',sans-serif;
-color:#000000;
-font-size:15px;
-line-height:1.6;
-max-width:420px;
-margin:auto;
-">
-Please wait while we connect you securely to the payment gateway.
-</p>
 <button
-onclick="startPayment()"
+id="payButton"
+onclick="handlePayment()"
 style="
 background:#12cfff;
 color:#000000;
@@ -128,7 +119,23 @@ Proceed to Secure Payment
 </form>
 
 <script>
+let paymentStarted = false;
 
+function handlePayment() {
+
+if(paymentStarted) return;
+
+paymentStarted = true;
+
+document.getElementById("payButton").innerText =
+"Please Wait...";
+
+document.getElementById("payButton").disabled = true;
+
+startPayment();
+
+}
+  
 async function startPayment() {
 
 const params = new URLSearchParams(window.location.search);
