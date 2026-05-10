@@ -1,91 +1,125 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST");
+if (req.method !== "POST") {
 
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
+return res.status(405).json({
+error: "Method Not Allowed"
+});
 
-  const MERCHANT_KEY = "lAaXBo";
-  const SALT = "HUZnR2ZwvvareYCbhlhpQeA9uZQdgB6m";
+}
 
-  const body =
+try {
+
+const body =
 typeof req.body === "string"
 ? JSON.parse(req.body)
 : req.body;
 
-const { planid, txnid, firstname, email, phone } = body;
-  
-  
+const {
+planid,
+txnid,
+firstname,
+email
+} = body;
 
-  if (planid === "CONSULTATION") {
-    amount = "1000";
-    productinfo = "Consultation Fee";
-  }
+const MERCHANT_KEY = "lAaXBo";
 
-  else if (planid === "2MTP") {
-    amount = "3400";
-    productinfo = "2 Months Treatment Plan";
-  }
+const SALT = "HUZnR2ZwvvareYCbhlhpQeA9uZQdgB6m";
 
-  else if (planid === "4MTP") {
-    amount = "5200";
-    productinfo = "4 Months Treatment Plan";
-  }
-
-  else if (planid === "6MTP") {
-    amount = "7200";
-    productinfo = "6 Months Treatment Plan";
-  }
-
-  else if (planid === "12MTP") {
-    amount = "10800";
-    productinfo = "12 Months Treatment Plan";
-  }
-
-  else {
-    return res.status(400).json({
-      error: "Invalid Plan"
-    });
-  }
-
-  
-
-  const hashString =
-`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|${phone}||||||||||${SALT}`;
-  const hash = crypto
-    .createHash("sha512")
-    .update(hashString)
-    .digest("hex");
-
-let surl = "";
-let furl = "";
+let amount = "";
+let productinfo = "";
 
 if (planid === "CONSULTATION") {
 
-  surl = "https://payu-backend-ruby.vercel.app/consult-success";
-  furl = "https://payu-backend-ruby.vercel.app/payment-failure";
-
-} else {
-
-  surl = "https://payu-backend-ruby.vercel.app/payment-success";
-  furl = "https://payu-backend-ruby.vercel.app/payment-failure";
+amount = "1000";
+productinfo = "Consultation Fee";
 
 }
 
-return res.status(200).json({
-  key: MERCHANT_KEY,
-  txnid,
-  amount,
-  productinfo,
-  firstname,
-  email,
-  hash,
-  surl,
-  furl
+else if (planid === "2MTP") {
+
+amount = "3400";
+productinfo = "2 Months Treatment Plan";
+
+}
+
+else if (planid === "4MTP") {
+
+amount = "5200";
+productinfo = "4 Months Treatment Plan";
+
+}
+
+else if (planid === "6MTP") {
+
+amount = "7200";
+productinfo = "6 Months Treatment Plan";
+
+}
+
+else if (planid === "12MTP") {
+
+amount = "10800";
+productinfo = "12 Months Treatment Plan";
+
+}
+
+else {
+
+return res.status(400).json({
+error: "Invalid Plan"
 });
 
-};
+}
+
+const surl =
+"https://pay.kushalonline.com/test-success.html";
+
+const furl =
+"https://pay.kushalonline.com/test-failure.html";
+
+const hashString =
+`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${SALT}`;
+
+const hash = crypto
+.createHash("sha512")
+.update(hashString)
+.digest("hex");
+
+return res.status(200).json({
+
+key: MERCHANT_KEY,
+
+txnid,
+
+amount,
+
+productinfo,
+
+firstname,
+
+email,
+
+hash,
+
+surl,
+
+furl
+
+});
+
+}
+
+catch (error) {
+
+console.log(error);
+
+return res.status(500).json({
+error: "Hash generation failed"
+});
+
+}
+
+}
