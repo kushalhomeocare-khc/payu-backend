@@ -81,11 +81,28 @@ error: "Invalid Plan"
 
 }
 
-const surl =
-"https://pay.kushalonline.com/treatment-success.html";
+let surl = "";
+let furl = "";
 
-const furl =
+if (planid === "CONSULT") {
+
+surl =
+"https://pay.kushalonline.com/consult-success.html";
+
+furl =
 "https://pay.kushalonline.com/payment-failure.html";
+
+}
+
+else {
+
+surl =
+"https://pay.kushalonline.com/payment-success.html";
+
+furl =
+"https://pay.kushalonline.com/payment-failure.html";
+
+}
 
 const hashString =
 `${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${SALT}`;
