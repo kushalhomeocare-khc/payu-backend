@@ -83,6 +83,35 @@ color:#222;
 Secure checkout powered by PayU.
 </p>
 
+<p
+style="
+font-size:18px;
+font-weight:600;
+margin-top:28px;
+margin-bottom:8px;
+color:#111;
+"
+id="planName"
+>
+Treatment Plan
+</p>
+
+<p
+style="
+font-size:28px;
+font-weight:700;
+color:#12cfff;
+margin-top:0;
+margin-bottom:10px;
+font-family:'Oswald',sans-serif;
+letter-spacing:1px;
+"
+id="planAmount"
+>
+₹0
+</p>
+
+  
 <input
 type="email"
 id="email"
@@ -163,7 +192,59 @@ value="payu_paisa"
 </form>
 
 <script>
+const urlParams =
+new URLSearchParams(window.location.search);
 
+const planid =
+urlParams.get("planid") || "CONSULT";
+
+const planData = {
+
+CONSULT: {
+name: "Consultation Fee",
+amount: "₹1000"
+},
+
+2MTP: {
+name: "2 Months Treatment Plan",
+amount: "₹3400"
+},
+
+4MTP: {
+name: "4 Months Treatment Plan",
+amount: "₹5200"
+},
+
+6MTP: {
+name: "6 Months Treatment Plan",
+amount: "₹7200"
+},
+
+12MTP: {
+name: "12 Months Treatment Plan",
+amount: "₹10800"
+}
+
+};
+
+const selectedPlan =
+planData[planid];
+
+if (selectedPlan) {
+
+window.onload = function () {
+
+document.getElementById("planName").innerText =
+selectedPlan.name;
+
+document.getElementById("planAmount").innerText =
+selectedPlan.amount;
+
+};
+
+}
+
+  
 async function startPayment() {
 
 const email =
