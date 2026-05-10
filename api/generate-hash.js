@@ -20,14 +20,11 @@ typeof req.body === "string"
 const { planid } = body;
   const {
 txnid,
-amount,
-productinfo,
 firstname,
 email
 } = body;
   
-  let amount = "";
-  let productinfo = "";
+  
 
   if (planid === "CONSULTATION") {
     amount = "1000";
@@ -84,16 +81,8 @@ if (planid === "CONSULTATION") {
 
 }
 
-res.status(200).json({
-  key: MERCHANT_KEY,
-  txnid,
-  amount,
-  firstname,
-  email,
-  productinfo,
-  hash,
-  surl,
-  furl
+return res.status(200).json({
+hash
 });
 
 };
