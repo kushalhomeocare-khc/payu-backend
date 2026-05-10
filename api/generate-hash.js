@@ -82,7 +82,15 @@ if (planid === "CONSULTATION") {
 }
 
 return res.status(200).json({
-hash
+  key: MERCHANT_KEY,
+  txnid,
+  amount,
+  productinfo,
+  firstname,
+  email,
+  hash,
+  surl,
+  furl
 });
 
 };
