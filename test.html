@@ -120,6 +120,7 @@ const email = "test@gmail.com";
 
 document.getElementById("txnid").value = txnid;
 
+alert("Before fetch")
 const response = await fetch(
 "https://payu-backend-ruby.vercel.app/api/generate-hash",
 {
