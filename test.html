@@ -129,10 +129,8 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-planid: "CONSULTATION",
 txnid,
-amount,
-productinfo,
+planid: "CONSULTATION",
 firstname,
 email
 })
@@ -142,12 +140,23 @@ email
 const data = await response.json();
 alert(JSON.stringify(data));
 
-document.getElementById("hash").value = data.hash;
+document.querySelector('input[name="amount"]').value = data.amount;
 
-document.querySelector('input[name="amount"]').value = amount;
-document.querySelector('input[name="productinfo"]').value = productinfo;
-document.querySelector('input[name="firstname"]').value = firstname;
-document.querySelector('input[name="email"]').value = email;
+document.querySelector('input[name="productinfo"]').value = data.productinfo;
+
+document.querySelector('input[name="firstname"]').value = data.firstname;
+
+document.querySelector('input[name="email"]').value = data.email;
+
+document.querySelector('input[name="txnid"]').value = data.txnid;
+
+document.querySelector('input[name="key"]').value = data.key;
+
+document.querySelector('input[name="surl"]').value = data.surl;
+
+document.querySelector('input[name="furl"]').value = data.furl;
+
+document.querySelector('input[name="hash"]').value = data.hash;
 
 document.getElementById("payuForm").action =
 "https://secure.payu.in/_payment";
