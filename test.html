@@ -86,13 +86,13 @@ Proceed with PayU Checkout
 
 <input type="hidden" name="txnid" id="txnid">
 
-<input type="hidden" name="amount" value="10">
+<input type="hidden" name="amount">
 
-<input type="hidden" name="productinfo" value="Test Payment">
+<input type="hidden" name="productinfo">
 
-<input type="hidden" name="firstname" value="Patient">
+<input type="hidden" name="firstname">
 
-<input type="hidden" name="email" value="test@gmail.com">
+<input type="hidden" name="email">
 
 <input type="hidden" name="phone" value="9999999999">
 
@@ -112,37 +112,38 @@ async function startPayment() {
 
 const txnid = "TXN" + Date.now();
 
+const amount = "10";
+const productinfo = "Test Payment";
+const firstname = "Patient";
+const email = "test@gmail.com";
+
 document.getElementById("txnid").value = txnid;
 
 const response = await fetch(
-"https://https://payu-backend-ruby.vercel.app/api/generate-hash",
+"https://payu-backend-ruby.vercel.app/api/generate-hash",
 {
-
 method: "POST",
-
 headers: {
 "Content-Type": "application/json"
 },
-
 body: JSON.stringify({
-
-txnid: txnid,
-
-amount: "10",
-
-productinfo: "Test Payment",
-
-firstname: "Patient",
-
-email: "test@gmail.com"
-
+txnid,
+amount,
+productinfo,
+firstname,
+email
 })
-
-});
+}
+);
 
 const data = await response.json();
 
 document.getElementById("hash").value = data.hash;
+
+document.querySelector('input[name="amount"]').value = amount;
+document.querySelector('input[name="productinfo"]').value = productinfo;
+document.querySelector('input[name="firstname"]').value = firstname;
+document.querySelector('input[name="email"]').value = email;
 
 document.getElementById("payuForm").action =
 "https://secure.payu.in/_payment";
