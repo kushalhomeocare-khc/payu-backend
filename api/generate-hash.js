@@ -18,7 +18,8 @@ typeof req.body === "string"
 : req.body;
 
 const { planid } = body;
-
+  const { txnid, amount, productinfo, firstname, email } = body;
+  
   let amount = "";
   let productinfo = "";
 
@@ -53,14 +54,10 @@ const { planid } = body;
     });
   }
 
-  const txnid = "TXN" + Date.now();
-
-  const firstname = "Patient";
-  const email = "patient@example.com";
-  const phone = "9876543210";
+  
 
   const hashString =
-`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||${SALT}`;
+`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}||||||||||${SALT}`;
   const hash = crypto
     .createHash("sha512")
     .update(hashString)
