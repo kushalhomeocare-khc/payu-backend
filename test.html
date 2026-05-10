@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>PayU Test Payment</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body
+style="
+margin:0;
+background:#f5f5f5;
+font-family:'Poppins',sans-serif;
+color:#000000;
+">
+
+<div
+style="
+height:24px;
+background:#12cfff;
+width:100%;
+">
+</div>
+
+<div
+style="
+text-align:center;
+margin-top:80px;
+padding:20px;
+">
+
+<h2
+style="
+font-family:'Oswald',sans-serif;
+color:#12cfff;
+font-size:38px;
+margin-bottom:15px;
+">
+PayU Test Checkout
+</h2>
+
+<p
+style="
+font-size:18px;
+max-width:450px;
+margin:auto;
+line-height:1.6;
+">
+This is a simple static payment test page.
+</p>
+
+<button
+onclick="startPayment()"
+style="
+background:#12cfff;
+color:#000000;
+border:none;
+width:90%;
+max-width:700px;
+padding:22px 20px;
+font-size:20px;
+font-family:'Poppins',sans-serif;
+font-weight:700;
+letter-spacing:1px;
+border-radius:60px;
+margin-top:40px;
+cursor:pointer;
+box-shadow:0 6px 18px rgba(0,0,0,0.12);
+text-transform:uppercase;
+">
+Proceed with PayU Checkout
+</button>
+
+</div>
+
+<form id="payuForm" method="post">
+
+<input type="hidden" name="key" value="lAaXBo">
+
+<input type="hidden" name="txnid" id="txnid">
+
+<input type="hidden" name="amount" value="10">
+
+<input type="hidden" name="productinfo" value="Test Payment">
+
+<input type="hidden" name="firstname" value="Patient">
+
+<input type="hidden" name="email" value="test@gmail.com">
+
+<input type="hidden" name="phone" value="9999999999">
+
+<input type="hidden" name="surl"
+value="https://pay.kushalonline.com/test-success.html">
+
+<input type="hidden" name="furl"
+value="https://pay.kushalonline.com/test-failure.html">
+
+<input type="hidden" name="hash" id="hash">
+
+</form>
+
+<script>
+
+async function startPayment() {
+
+const txnid = "TXN" + Date.now();
+
+document.getElementById("txnid").value = txnid;
+
+const response = await fetch(
+"https://pay.kushalonline.com/api/generate-hash",
+{
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+
+txnid: txnid,
+
+amount: "10",
+
+productinfo: "Test Payment",
+
+firstname: "Patient",
+
+email: "test@gmail.com"
+
+})
+
+});
+
+const data = await response.json();
+
+document.getElementById("hash").value = data.hash;
+
+document.getElementById("payuForm").action =
+"https://secure.payu.in/_payment";
+
+document.getElementById("payuForm").submit();
+
+}
+
+</script>
+
+</body>
+</html>
