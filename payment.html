@@ -212,6 +212,9 @@ email
 
 const data = await response.json();
 
+const amount = data.amount;
+const productinfo = data.productinfo;
+  
 document.querySelector('input[name="amount"]').value =
 data.amount;
 
