@@ -103,7 +103,7 @@ value="https://pay.kushalonline.com/test-success.html">
 value="https://pay.kushalonline.com/test-failure.html">
 
 <input type="hidden" name="hash" id="hash">
-
+<input type="hidden" name=""service_provider" value="payu_paisa">
 </form>
 
 <script>
@@ -129,6 +129,7 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
+planid: "CONSULTATION",
 txnid,
 amount,
 productinfo,
