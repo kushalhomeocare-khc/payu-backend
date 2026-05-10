@@ -17,12 +17,7 @@ typeof req.body === "string"
 ? JSON.parse(req.body)
 : req.body;
 
-const { planid } = body;
-  const {
-txnid,
-firstname,
-email
-} = body;
+const { planid, txnid, firstname, email, phone } = body;
   
   
 
