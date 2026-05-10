@@ -82,10 +82,10 @@ error: "Invalid Plan"
 }
 
 const surl =
-"https://pay.kushalonline.com/test-success.html";
+"https://pay.kushalonline.com/treatment-success.html";
 
 const furl =
-"https://pay.kushalonline.com/test-failure.html";
+"https://pay.kushalonline.com/payment-failure.html";
 
 const hashString =
 `${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${SALT}`;
