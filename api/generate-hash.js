@@ -18,7 +18,13 @@ typeof req.body === "string"
 : req.body;
 
 const { planid } = body;
-  const { txnid, amount, productinfo, firstname, email } = body;
+  const {
+txnid,
+amount,
+productinfo,
+firstname,
+email
+} = body;
   
   let amount = "";
   let productinfo = "";
@@ -84,7 +90,6 @@ res.status(200).json({
   amount,
   firstname,
   email,
-  phone,
   productinfo,
   hash,
   surl,
