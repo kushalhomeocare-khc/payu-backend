@@ -60,7 +60,7 @@ const { planid } = body;
   const phone = "9876543210";
 
   const hashString =
-`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}||||||||||${SALT}`;
+`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||${SALT}`;
   const hash = crypto
     .createHash("sha512")
     .update(hashString)
