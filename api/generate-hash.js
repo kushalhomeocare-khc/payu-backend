@@ -31,7 +31,7 @@ const SALT = "HUZnR2ZwvvareYCbhlhpQeA9uZQdgB6m";
 let amount = "";
 let productinfo = "";
 
-if (planid === "CONSULTATION") {
+if (planid === "CONSULT") {
 
 amount = "1000";
 productinfo = "Consultation Fee";
