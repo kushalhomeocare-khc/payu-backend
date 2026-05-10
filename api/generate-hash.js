@@ -55,7 +55,7 @@ const { planid, txnid, firstname, email, phone } = body;
   
 
   const hashString =
-`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}||||||||||${SALT}`;
+`${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|${phone}||||||||||${SALT}`;
   const hash = crypto
     .createHash("sha512")
     .update(hashString)
