@@ -55,7 +55,21 @@ line-height:1.6;
 ">
 This is a simple static payment test page.
 </p>
-
+<input
+type="text"
+id="phone"
+placeholder="Enter Mobile Number"
+style="
+width:90%;
+max-width:700px;
+padding:18px;
+margin-top:20px;
+border-radius:12px;
+border:1px solid #ccc;
+font-size:18px;
+"
+>
+  
 <button
 onclick="startPayment()"
 style="
@@ -87,6 +101,7 @@ Proceed with PayU Checkout
 <input type="hidden" name="txnid" id="txnid">
 
 <input type="hidden" name="amount">
+<input type="hidden" name="phone">
 
 <input type="hidden" name="productinfo">
 
@@ -94,7 +109,6 @@ Proceed with PayU Checkout
 
 <input type="hidden" name="email">
 
-<input type="hidden" name="phone" value="9999999999">
 
 <input type="hidden" name="surl"
 value="https://pay.kushalonline.com/test-success.html">
@@ -117,7 +131,8 @@ const amount = "10";
 const productinfo = "Test Payment";
 const firstname = "Patient";
 const email = "test@gmail.com";
-
+const phone = document.getElementById("phone").value;
+  
 document.getElementById("txnid").value = txnid;
 
 alert("Before fetch")
@@ -132,7 +147,8 @@ body: JSON.stringify({
 txnid,
 planid: "CONSULTATION",
 firstname,
-email
+email,
+phone
 })
 }
 );
@@ -161,6 +177,7 @@ document.querySelector('input[name="hash"]').value = data.hash;
 document.getElementById("payuForm").action =
 "https://secure.payu.in/_payment";
 
+document.querySelector('input[name="phone"]').value = phone;
 document.getElementById("payuForm").submit();
 
 }
