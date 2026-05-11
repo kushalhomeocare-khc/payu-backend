@@ -87,22 +87,20 @@ let furl = "";
 if (planid === "CONSULT") {
 
 surl =
-"https://pay.kushalonline.com/consult-success.html";
-
-furl =
-"https://pay.kushalonline.com/payment-failure.html";
+"https://payu-backend-ruby.vercel.app/api/consult-success";
 
 }
 
 else {
 
 surl =
-"https://pay.kushalonline.com/payment-success.html";
-
-furl =
-"https://pay.kushalonline.com/payment-failure.html";
+"https://payu-backend-ruby.vercel.app/api/payment-success";
 
 }
+
+furl =
+"https://payu-backend-ruby.vercel.app/api/payment-failure";
+
 
 const hashString =
 `${MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${SALT}`;
