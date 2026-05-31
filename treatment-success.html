@@ -26,14 +26,26 @@ font-size:13px;
 padding:8px;
 }
 
-.header{
+header{
 background:#12CFFF;
+display:flex;
+justify-content:space-between;
+align-items:center;
 padding:18px 20px;
 }
 
-.logo img{
+.logo{
 height:52px;
-max-width:100%;
+width:auto;
+display:block;
+}
+
+.home-link{
+color:#000;
+text-decoration:none;
+font-size:16px;
+font-family:Roboto,sans-serif;
+font-weight:500;
 }
 
 .white{
@@ -199,13 +211,16 @@ width:230px;
 </div>
 
 <div class="header">
-<div class="logo">
-<a href="https://kushalonline.com">
-<img src="/logo.png" alt="Kushal Online">
-</a>
-</div>
-</div>
 
+<a href="https://kushalonline.com">
+<img src="/logo.png" alt="Kushal Online" class="logo">
+</a>
+
+<a href="https://kushalonline.com" class="home-link">
+Home
+</a>
+
+</div>
 <div class="white">
 <div class="content">
 
