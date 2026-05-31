@@ -47,7 +47,7 @@ productinfo = "Consultation Fee";
 
 else if (planid === "2MTP") {
 
-amount = "3400";
+amount = "34";
 productinfo = "2 Months Treatment Plan";
 
 }
