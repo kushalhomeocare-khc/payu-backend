@@ -42,12 +42,17 @@ if (planid === "CONSULT") {
 
 amount = "1000";
 productinfo = "Consultation Fee";
+}
 
+else if (planid === "TEST") {
+
+amount = "10";
+productinfo = "Test";
 }
 
 else if (planid === "2MTP") {
 
-amount = "34";
+amount = "3400";
 productinfo = "2 Months Treatment Plan";
 
 }
