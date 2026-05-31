@@ -31,12 +31,13 @@ background:#12CFFF;
 display:flex;
 justify-content:space-between;
 align-items:center;
+overflow:hidden;
 padding:18px 20px;
 }
 
 .logo{
-height:52px;
-width:auto;
+max-width:75%;
+height:auto;
 display:block;
 }
 
@@ -79,9 +80,32 @@ margin-bottom:25px;
 .main-title span{
 width:45px;
 height:2px;
-background:#8cb8c9;
+background:#18cb8c9;
+}
+@media (max-width:768px){
+
+.main-title{
+display:block;
+text-align:center;
+font-size:32px;
+line-height:1.2;
 }
 
+.main-title span{
+display:none;
+}
+
+.logo{
+height:32px;
+width:auto;
+}
+
+.home-link{
+font-size:16px;
+font-weight:700;
+}
+
+}
 .center{
 text-align:center;
 }
@@ -201,7 +225,19 @@ font-size:16px;
 .btn{
 width:230px;
 }
+@media (max-width:768px){
+
+.logo{
+height:32px;
 }
+
+.home-link{
+font-size:16px;
+font-weight:700;
+}
+
+}
+  
 </style>
 </head>
 <body>
