@@ -53,7 +53,7 @@ productinfo = "Test";
 else if (planid === "1MTP") {
 
 amount = "2500";
-productinfo = "1 Months Treatment Plan";
+productinfo = "1 Month Treatment Plan";
 
 }
 
