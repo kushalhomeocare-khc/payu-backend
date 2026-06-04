@@ -50,30 +50,30 @@ amount = "10";
 productinfo = "Test";
 }
 
-else if (planid === "2MTP") {
+else if (planid === "1MTP") {
 
-amount = "3400";
-productinfo = "2 Months Treatment Plan";
+amount = "2500";
+productinfo = "1 Months Treatment Plan";
 
 }
 
-else if (planid === "4MTP") {
+else if (planid === "3MTP") {
 
-amount = "5200";
-productinfo = "4 Months Treatment Plan";
+amount = "5500";
+productinfo = "3 Months Treatment Plan";
 
 }
 
 else if (planid === "6MTP") {
 
-amount = "7200";
+amount = "8500";
 productinfo = "6 Months Treatment Plan";
 
 }
 
 else if (planid === "12MTP") {
 
-amount = "10800";
+amount = "14500";
 productinfo = "12 Months Treatment Plan";
 
 }
