@@ -67,7 +67,7 @@ margin-bottom:12px;
 letter-spacing:1px;
 "
 >
-Secure Payment | Kushal Online
+Secure Payment
 </h2>
 
 <p
@@ -256,7 +256,7 @@ document.getElementById("txnid").value = txnid;
 const patientName=document.getElementById('patientName').value.trim();const age=document.getElementById('age').value.trim();const gender=document.getElementById('gender').value;const mobile=document.getElementById('mobile').value.trim();const whatsapp=document.getElementById('whatsapp').value.trim();const address=document.getElementById('address').value.trim();const city=document.getElementById('city').value.trim();const state=document.getElementById('state').value.trim();const zip=document.getElementById('zip').value.trim();const country=document.getElementById('country').value.trim();const complaints=document.getElementById('complaints').value.trim();if(!patientName||!age||!gender||!email||!mobile||!address||!city||!state||!zip||!country||!complaints||!document.getElementById('agree').checked){alert('Please complete all required fields.');return;}const wf=new FormData();wf.append('access_key','db9b8a4b-dccc-4ae6-a459-a11e9058a477');[['Patient Name',patientName],['Age',age],['Gender',gender],['Email',email],['Mobile',mobile],['WhatsApp',whatsapp],['Address',address],['City',city],['State',state],['ZIP/PIN',zip],['Country',country],['Chief Complaints',complaints],['Treatment Plan',selectedPlan.name],['Amount',selectedPlan.amount]].forEach(x=>wf.append(x[0],x[1]));await fetch('https://api.web3forms.com/submit',{method:'POST',body:wf});
 // OPTIONAL: Save to Google Sheets (replace YOUR_GOOGLE_SCRIPT_URL)
 try{
-await fetch("YOUR_GOOGLE_SCRIPT_URL",{
+await fetch("https://script.google.com/macros/s/AKfycbzXAxG_ha08DuXcZn9cuCJVtsysko24s7bYWry4MwOe-sy5BQVMWG9iEToREJ3Mf1vn9Q/exec",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
