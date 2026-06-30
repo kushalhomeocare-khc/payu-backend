@@ -40,7 +40,7 @@ let productinfo = "";
 
 if (planid === "CONSULT") {
 
-amount = "2000";
+amount = "1000";
 productinfo = "Consultation Fee";
 }
 
