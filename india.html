@@ -245,7 +245,11 @@ const wf=new FormData();
 wf.append("access_key","db9b8a4b-dccc-4ae6-a459-a11e9058a477");
 [
 ["Patient Name",patientName],["Age",age],["Gender",gender],["Email",email],["Mobile",mobile],["WhatsApp",whatsapp],["Address",address],["City",city],["State",state],["ZIP/PIN",zip],["Country",country],["Chief Complaints",complaints],
-["Source","International"],["Payment Method","PayPal"],["Currency","USD"],["Plan Code",plan.code],["Plan Name",plan.name]
+["Source","India"],
+["Payment Method","PayU"],
+["Currency","INR"],
+["Plan Code",selectedPlan.code],
+["Plan Name",selectedPlan.name]
 ].forEach(x=>wf.append(x[0],x[1]));
 try{
 const wfRes=await fetch("https://api.web3forms.com/submit",{method:"POST",body:wf});
@@ -253,7 +257,62 @@ const wfJson=await wfRes.json();
 if(!wfRes.ok||!wfJson.success){loadingOverlay.style.display="none";isProcessing=false;btn.disabled=false;btn.innerText="Proceed to Secure Payment";alert("Unable to submit the form. Please try again.");return;}
 }catch(e){loadingOverlay.style.display="none";isProcessing=false;btn.disabled=false;btn.innerText="Proceed to Secure Payment";alert("Unable to submit the form. Please check your internet connection and try again.");return;}
 try{
-const payload={plan_name:plan.name,patient_name:patientName,age:age,gender:gender,email:email,mobile:mobile,whatsapp:whatsapp,address:address,city:city,state:state,zip:zip,country:country,complaints:complaints,amount:plan.amount,currency:"USD",payment_method:"PayPal",payment_status:"Pending",payment_id:"",transaction_id:"",plan_code:plan.code,source:"International",medicine_dispatched:"",dispatch_date:"",courier:"",tracking_number:"",notes:""};
+const payload = {
+
+    plan_name: selectedPlan.name,
+
+    patient_name: patientName,
+
+    age: age,
+
+    gender: gender,
+
+    email: email,
+
+    mobile: mobile,
+
+    whatsapp: whatsapp,
+
+    address: address,
+
+    city: city,
+
+    state: state,
+
+    zip: zip,
+
+    country: country,
+
+    complaints: complaints,
+
+    amount: selectedPlan.amount,
+
+    currency: "INR",
+
+    payment_method: "PayU",
+
+    payment_status: "Pending",
+
+    payment_id: "",
+
+    transaction_id: txnid,
+
+    plan_code: selectedPlan.code,
+
+    source: "India",
+
+    medicine_dispatched: "",
+
+    dispatch_date: "",
+
+    courier: "",
+
+    tracking_number: "",
+
+    notes: ""
+
+};
+
 let success=false;
 for(let i=0;i<2&&!success;i++){
  try{
