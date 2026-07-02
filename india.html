@@ -178,17 +178,62 @@ value="payu_paisa"
 </form>
 
 <script>
-const plans={
-TEST:{code:"TEST",name:"Test Payment",amount:"US $1",url:"https://www.paypal.com/ncp/payment/E48YSSPWBBUTA"},
-CONSULT:{code:"CONSULT",name:"Consultation Fee",amount:"US $20",url:"https://www.paypal.com/ncp/payment/Z6B6YHUXWGTLE"},
-"3MTP":{code:"3MTP",name:"3 Months Treatment Plan",amount:"US $130",url:"https://www.paypal.com/ncp/payment/GGXLNSVRMSKL4"},
-"6MTP":{code:"6MTP",name:"6 Months Treatment Plan",amount:"US $200",url:"https://www.paypal.com/ncp/payment/M5PQNHSXDNXXA"},
-"12MTP":{code:"12MTP",name:"12 Months Treatment Plan",amount:"US $360",url:"https://www.paypal.com/ncp/payment/ZHC9QZBLXQUKQ"},
-"24MTP":{code:"24MTP",name:"24 Months Treatment Plan",amount:"US $750",url:"https://www.paypal.com/ncp/payment/KKQRB7783UULC"}
+const urlParams = new URLSearchParams(window.location.search);
+
+const planid = urlParams.get("planid") || "CONSULT";
+
+const planData = {
+
+    "CONSULT": {
+        code: "CONSULT",
+        name: "Consultation Fee",
+        amount: "₹1000"
+    },
+
+    "TEST": {
+        code: "TEST",
+        name: "Test",
+        amount: "₹10"
+    },
+
+    "1MTP": {
+        code: "1MTP",
+        name: "1 Month Treatment Plan",
+        amount: "₹2500"
+    },
+
+    "3MTP": {
+        code: "3MTP",
+        name: "3 Months Treatment Plan",
+        amount: "₹5500"
+    },
+
+    "6MTP": {
+        code: "6MTP",
+        name: "6 Months Treatment Plan",
+        amount: "₹8500"
+    },
+
+    "12MTP": {
+        code: "12MTP",
+        name: "12 Months Treatment Plan",
+        amount: "₹14500"
+    }
+
 };
-const plan=plans[(new URLSearchParams(location.search).get("plan")||"CONSULT").toUpperCase()]||plans.CONSULT;
+
+const selectedPlan = planData[planid] || planData.CONSULT;
 let isProcessing=false;
-window.onload=()=>{planName.innerText=plan.name;planAmount.innerText=plan.amount;country.value="";};
+window.onload = () => {
+
+    planName.innerText = selectedPlan.name;
+
+    planAmount.innerText = selectedPlan.amount;
+
+    country.value = "India";
+
+};
+
 async function startPayment(){
 if(isProcessing)return;
 
