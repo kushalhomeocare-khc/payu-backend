@@ -360,7 +360,9 @@ try {
     );
 
     const data = await response.json();
-
+if (!response.ok || !data.hash) {
+    throw new Error("Invalid PayU hash response");
+}
     document.querySelector('input[name="amount"]').value = data.amount;
     document.querySelector('input[name="productinfo"]').value = data.productinfo;
     document.querySelector('input[name="firstname"]').value = data.firstname;
