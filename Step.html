@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kushal Online - Online Treatment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--accent:#12CFFF;
+--bg:#F4FBFF;
+--text:#222;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Roboto,sans-serif;
+color:var(--text);
+background:#fff;
+line-height:1.7;
+}
+img{display:block;max-width:100%}
+.online-treatment{
+padding:18px 20px 0;
+}
+.container{
+max-width:1080px;
+margin:auto;
+}
+.intro{
+font-size:1.25rem;
+margin:0 0 28px;
+}
+.timeline{
+position:relative;
+padding-left:54px;
+}
+.timeline:before{
+content:"";
+position:absolute;
+left:18px;
+top:0;
+bottom:0;
+width:2px;
+background:#c8f3ff;
+}
+.step{
+position:relative;
+margin:0 0 24px;
+}
+.step:last-child{margin-bottom:0}
+.card{
+position:relative;
+background:var(--bg);
+border-left:4px solid var(--accent);
+border-radius:24px;
+padding:24px 130px 24px 34px;
+box-shadow:0 14px 34px rgba(0,0,0,.08);
+}
+.number{
+position:absolute;
+left:-22px;
+top:26px;
+width:44px;
+height:44px;
+border-radius:50%;
+background:#fff;
+border:2px solid var(--accent);
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:"Fjalla One",sans-serif;
+color:var(--accent);
+font-size:1.05rem;
+}
+.photo{
+position:absolute;
+right:-38px;
+top:50%;
+transform:translateY(-50%);
+width:130px;
+height:130px;
+border-radius:50%;
+overflow:hidden;
+background:#fff;
+border:3px solid #fff;
+outline:2px solid var(--accent);
+box-shadow:0 10px 24px rgba(0,0,0,.16);
+}
+.photo img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+h2{
+font-family:"Fjalla One",sans-serif;
+font-size:2rem;
+margin-bottom:8px;
+font-weight:400;
+}
+@media(max-width:768px){
+.online-treatment{padding:14px 16px 0}
+.intro{font-size:1.15rem}
+.timeline{padding-left:50px}
+.card{
+padding:22px 90px 22px 26px;
+}
+.photo{
+width:100px;
+height:100px;
+right:-24px;
+}
+h2{font-size:1.55rem}
+}
+</style>
+</head>
+<body>
+<section class="online-treatment">
+<div class="container">
+<p class="intro">A simple, guided process designed to make personalized homeopathic treatment convenient from the comfort of your home.</p>
+
+<div class="timeline">
+
+<article class="step">
+<div class="card">
+<div class="number">01</div>
+<div class="photo"><img src="https://pay.kushalonline.com/image/step1.jpg" alt="Step 1"></div>
+<h2>Choose Your Plan</h2>
+<p>Select a treatment plan, share your basic details and health concerns, and complete your secure payment.</p>
+</div>
+</article>
+
+<article class="step">
+<div class="card">
+<div class="number">02</div>
+<div class="photo"><img src="https://pay.kushalonline.com/image/step2.jpg" alt="Step 2"></div>
+<h2>Share Case Details</h2>
+<p>Our doctors review your case, gather additional details, and finalize your prescription.</p>
+</div>
+</article>
+
+<article class="step">
+<div class="card">
+<div class="number">03</div>
+<div class="photo"><img src="https://pay.kushalonline.com/image/step3.jpg" alt="Step 3"></div>
+<h2>Receive Your Medicines</h2>
+<p>Medicines are delivered to your doorstep with clear dosage instructions.</p>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+</body>
+</html>
