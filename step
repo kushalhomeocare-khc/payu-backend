@@ -1,1 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Online Treatment in 3 Simple Steps</title>
+
+<!-- ==========================================
+     GOOGLE FONTS
+========================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+/*==================================================
+RESET
+==================================================*/
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Roboto',sans-serif;
+    color:#000;
+    background:#fff;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+
+img{
+    display:block;
+    width:100%;
+    height:auto;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button{
+    font:inherit;
+}
+
+:focus-visible{
+    outline:3px solid rgba(18,207,255,.55);
+    outline-offset:4px;
+}
+
+/*==================================================
+SECTION
+==================================================*/
+
+.online-treatment{
+    position:relative;
+    background:#fff;
+    padding:120px 24px;
+    overflow:hidden;
+}
+
+.online-treatment .container{
+    width:min(1200px,100%);
+    margin:0 auto;
+}
+
+/*==================================================
+HEADER
+==================================================*/
+
+.section-header{
+    max-width:760px;
+    margin:0 auto 110px;
+    text-align:center;
+}
+
+.section-label{
+    display:inline-block;
+    margin-bottom:18px;
+
+    font-size:.90rem;
+    font-weight:700;
+    letter-spacing:.20em;
+    text-transform:uppercase;
+
+    color:#12CFFF;
+}
+
+.section-title{
+
+    font-family:'Fjalla One',sans-serif;
+
+    font-size:clamp(2.4rem,4vw,4rem);
+
+    line-height:0.3;
+
+    color:#151515;
+
+    margin-bottom:24px;
+}
+
+.section-intro{
+
+    font-size:1.47rem;
+
+    color:#000;
+
+    max-width:700px;
+
+    margin:auto;
+}
+
+/*==================================================
+TIMELINE
+==================================================*/
+
+.timeline{
+
+    position:relative;
+
+    padding:20px 0;
+}
+
+.timeline::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+
+    top:0;
+
+    bottom:0;
+
+    width:2px;
+
+    transform:translateX(-50%);
+
+    background:
+    linear-gradient(
+    to bottom,
+    transparent,
+    rgba(18,207,255,.40) 10%,
+    rgba(18,207,255,.45) 50%,
+    rgba(18,207,255,.40) 90%,
+    transparent
+    );
+}
+
+/*==================================================
+TIMELINE ITEM
+==================================================*/
+
+.timeline-item{
+
+    position:relative;
+
+    display:grid;
+
+    grid-template-columns:1fr 120px 1fr;
+
+    align-items:center;
+
+    column-gap:36px;
+
+    margin-bottom:140px;
+}
+
+.timeline-item:last-child{
+
+    margin-bottom:0;
+}
+
+/*==================================================
+NUMBER MARKER
+==================================================*/
+
+.timeline-marker{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:relative;
+
+    z-index:5;
+}
+
+.marker-circle{
+
+    width:84px;
+
+    height:84px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    border:3px solid #12CFFF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-family:'Fjalla One',sans-serif;
+
+    font-size:1.45rem;
+
+    letter-spacing:.04em;
+
+    color:#12CFFF;
+
+    box-shadow:
+        0 0 0 10px rgba(18,207,255,.08),
+        0 16px 40px rgba(18,207,255,.18);
+}
+
+/*==================================================
+CARD
+==================================================*/
+
+.timeline-card{
+
+    position:relative;
+
+    max-width:480px;
+
+    background:#EEF9FE
+
+    border-radius:28px;
+
+    padding:100px 42px 42px;
+
+    border-top:4px solid #12CFFF;
+
+    box-shadow:
+        0 18px 60px rgba(0,0,0,.08);
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+}
+
+.timeline-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 26px 70px rgba(0,0,0,.12);
+}
+
+.left-card{
+
+    justify-self:end;
+}
+
+.right-card{
+
+    justify-self:start;
+}
+
+.step-number{
+
+    display:inline-block;
+
+    margin-bottom:14px;
+
+    color:#12CFFF;
+
+    font-size:.88rem;
+
+    font-weight:700;
+
+    letter-spacing:.18em;
+}
+
+.timeline-card h3{
+
+    font-family:'Fjalla One',sans-serif;
+
+    font-size:2rem;
+
+    line-height:1.15;
+
+    color:#151515;
+
+    margin-bottom:18px;
+}
+
+.timeline-card p{
+
+    color:#555;
+
+    font-size:1.03rem;
+}
+/*==================================================
+FLOATING IMAGE
+==================================================*/
+
+.floating-image{
+
+    position:absolute;
+
+    top:-90px;
+
+    width:150px;
+
+    height:150px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    background:#fff;
+
+    border:8px solid #fff;
+
+    outline:3px solid #12CFFF;
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.18),
+0 0 30px rgba(18, 207, 255, .15 );
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+
+    z-index:2;
+}
+
+.timeline-card:hover .floating-image{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+        0 22px 50px rgba(0,0,0,.18);
+}
+
+.left-card .floating-image{
+
+    right:34px;
+}
+
+.right-card .floating-image{
+
+    left:34px;
+}
+
+.floating-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+/*==================================================
+CONNECTOR LINES
+==================================================*/
+
+.left-card::after,
+.right-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:50%;
+
+    width:60px;
+
+    height:2px;
+
+    background:rgba(18,207,255,.50);
+}
+
+.left-card::after{
+
+    right:-60px;
+}
+
+.right-card::before{
+
+    left:-60px;
+}
+
+/*==================================================
+CTA
+==================================================*/
+
+.treatment-cta{
+
+    margin-top:110px;
+}
+
+.cta-box{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:50px;
+
+    padding:60px;
+
+    border-radius:32px;
+
+    background:
+        linear-gradient(
+        135deg,
+        #12CFFF,
+        #31d7ff
+        );
+
+    box-shadow:
+        0 28px 65px rgba(18,207,255,.22);
+}
+
+.cta-content{
+
+    max-width:720px;
+}
+
+.cta-label{
+
+    display:inline-block;
+
+    margin-bottom:16px;
+
+    color:#000;
+
+    font-size:.90rem;
+
+    font-weight:700;
+
+    letter-spacing:.20em;
+
+    text-transform:uppercase;
+}
+
+.cta-content h2{
+
+    font-family:'Fjalla One',sans-serif;
+
+    color:#000;
+
+    font-size:clamp(2rem,3vw,3rem);
+
+    line-height:1.18;
+}
+
+/*==================================================
+PILL BUTTON
+==================================================*/
+
+.cta-button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px 40px;
+
+    min-width:230px;
+
+    border-radius:999px;
+
+    background:#000;
+
+    color:#12cfff;
+
+    font-weight:700;
+
+    font-size:.96rem;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    border:2px solid #000;
+
+    box-shadow:
+        0 14px 34px rgba(0,0,0,.15);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        background .3s ease;
+}
+
+.cta-button:hover{
+
+    transform:translateY(-4px);
+
+    background:#09bdea;
+
+    box-shadow:
+        0 20px 42px rgba(0,0,0,.18);
+}
+
+.cta-button:active{
+
+    transform:translateY(-1px);
+}
+
+/*==================================================
+TABLET
+==================================================*/
+
+@media (max-width:992px){
+
+.timeline-item{
+
+    grid-template-columns:1fr 80px 1fr;
+
+    column-gap:32px;
+
+    margin-bottom:120px;
+}
+
+.marker-circle{
+
+    width:72px;
+    height:72px;
+    font-size:1.25rem;
+}
+
+.timeline-card{
+
+    max-width:100%;
+
+    padding:105px 24px 28px;
+}
+
+.timeline-card h3{
+
+    font-size:1.7rem;
+}
+
+.floating-image{
+
+    width:100px;
+    height:100px;
+}
+
+.left-card::after,
+.right-card::before{
+
+    width:46px;
+}
+
+.left-card::after{
+
+    right:-46px;
+}
+
+.right-card::before{
+
+    left:-46px;
+}
+
+.cta-box{
+
+    flex-direction:column;
+
+    text-align:center;
+
+    padding:20px 20px;
+}
+
+}
+
+/*==================================================
+MOBILE
+==================================================*/
+
+@media (max-width:768px){
+
+.online-treatment{
+
+    padding:90px 18px;
+}
+
+.section-header{
+
+    margin-bottom:70px;
+}
+
+.timeline{
+
+    padding-left:68px;
+}
+
+.timeline::before{
+
+    left:30px;
+
+    transform:none;
+}
+
+.timeline-item{
+
+    display:block;
+
+    margin-bottom:90px;
+}
+
+.timeline-marker{
+
+    position:absolute;
+
+    left:0;
+
+    top:34px;
+
+    width:60px;
+}
+
+.marker-circle{
+
+    width:54px;
+    height:54px;
+    font-size:1rem;
+}
+
+.timeline-card{
+
+    max-width:none;
+
+    width:100%;
+
+    padding:96px 24px 28px;
+
+    border-top:none;
+
+    border-left:5px solid #12CFFF;
+
+    border-radius:24px;
+}
+
+.left-card,
+.right-card{
+
+    justify-self:stretch;
+}
+
+.left-card::after,
+.right-card::before{
+
+    display:none;
+}
+
+.floating-image{
+
+    left:50% !important;
+
+    right:auto !important;
+
+    top:-45px;
+
+    width:90px;
+
+    height:90px;
+
+    transform:translateX(-50%);
+}
+
+.timeline-card:hover .floating-image{
+
+    transform:translateX(-50%) translateY(-6px);
+}
+
+.cta-box{
+
+    padding:40px 26px;
+
+    border-radius:26px;
+}
+
+.cta-button{
+
+    width:100%;
+
+    max-width:320px;
+}
+
+}
+
+@media (max-width:480px){
+
+.section-title{
+
+    font-size:2.2rem;
+}
+
+.section-intro{
+
+    font-size:1rem;
+}
+
+.timeline{
+
+    padding-left:58px;
+}
+
+.timeline::before{
+
+    left:26px;
+}
+
+.marker-circle{
+
+    width:50px;
+    height:50px;
+}
+
+.timeline-card{
+
+    padding:68px 22px 26px;
+}
+
+.timeline-card h3{
+
+    font-size:1.45rem;
+}
+
+.floating-image{
+
+    width:84px;
+    height:84px;
+}
+
+.cta-content h2{
+
+    font-size:1.8rem;
+}
+
+}
+
+/*==================================================
+REDUCED MOTION
+==================================================*/
+
+@media (prefers-reduced-motion:reduce){
+
+html{
+
+    scroll-behavior:auto;
+}
+
+*,
+*::before,
+*::after{
+
+    transition:none !important;
+
+    animation:none !important;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section class="online-treatment">
+
+    <div class="container">
+
+        <!-- ==========================================
+             SECTION HEADER
+        ========================================== -->
+
+        <header class="section-header">
+
+       
+
+            <p class="section-intro">
+                A simple, guided process designed to make personalized homeopathic treatment convenient from the comfort of your home.
+            </p>
+
+        </header>
+
+        <!-- ==========================================
+             TIMELINE
+        ========================================== -->
+
+        <div class="timeline">
+
+            <!-- STEP 1 -->
+
+            <article class="timeline-item">
+
+                <div class="timeline-card left-card">
+
+                    <div class="floating-image">
+                        <img
+                            src="https://pay.kushalonline.com/images/step1.jpg"
+                            alt="Patient choosing an online homeopathic treatment plan"
+                            loading="lazy"
+                            decoding="async">
+                    </div>
+
+                    <span class="step-number">
+                        STEP 01
+                    </span>
+
+                    <h3>
+                        Choose Your Plan
+                    </h3>
+
+                    <p>
+                        Select a treatment plan, share your basic details and health concerns, and complete your secure payment.
+                    </p>
+
+                </div>
+
+                <div class="timeline-marker">
+                    <div class="marker-circle">
+                        01
+                    </div>
+                </div>
+
+                <div></div>
+
+            </article>
+
+            <!-- STEP 2 -->
+
+            <article class="timeline-item">
+
+                <div></div>
+
+                <div class="timeline-marker">
+                    <div class="marker-circle">
+                        02
+                    </div>
+                </div>
+
+                <div class="timeline-card right-card">
+
+                    <div class="floating-image">
+                        <img
+                            src="https://pay.kushalonline.com/images/step2.jpg"
+                            alt="Doctor reviewing patient case details"
+                            loading="lazy"
+                            decoding="async">
+                    </div>
+
+                    <span class="step-number">
+                        STEP 02
+                    </span>
+
+                    <h3>
+                        Share Case Details
+                    </h3>
+
+                    <p>
+                        Our doctors review your case, gather additional details, and finalize your prescription.
+                    </p>
+
+                </div>
+
+            </article>
+
+            <!-- STEP 3 -->
+
+            <article class="timeline-item">
+
+                <div class="timeline-card left-card">
+
+                    <div class="floating-image">
+                        <img
+                            src="https://pay.kushalonline.com/images/step3.jpg"
+                            alt="Homeopathic medicines delivered to the patient's doorstep"
+                            loading="lazy"
+                            decoding="async">
+                    </div>
+
+                    <span class="step-number">
+                        STEP 03
+                    </span>
+
+                    <h3>
+                        Receive Your Medicines
+                    </h3>
+
+                    <p>
+                        Medicines are delivered to your doorstep with clear dosage instructions.
+                    </p>
+
+                </div>
+
+                <div class="timeline-marker">
+                    <div class="marker-circle">
+                        03
+                    </div>
+                </div>
+
+                <div></div>
+
+            </article>
+
+        </div>
+
+        <!-- ==========================================
+             CTA
+        ========================================== -->
+
+        <section class="treatment-cta" aria-labelledby="online-treatment-cta">
+
+            <div class="cta-box">
+
+                <div class="cta-content">
+
+                    <span class="cta-label">
+                        ONLINE TREATMENT
+                    </span>
+
+                    <h2 id="online-treatment-cta">
+                        Learn How Online Treatment Works and Explore Our Treatment Plans
+                    </h2>
+
+                </div>
+
+                <a
+                    href="https://kushalonline.com/start-online-treatment"
+                    class="cta-button"
+                    aria-label="Learn how online treatment works">
+                    HOW IT WORKS
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+</body>
+</html>
+
 
