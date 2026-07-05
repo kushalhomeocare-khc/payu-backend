@@ -13,21 +13,21 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Roboto,sans-serif;background:#fff;color:#444}
 .wrap{max-width:1220px;margin:auto;padding:0 52px 28px 18px}
-.intro{font-size:clamp(17px,1.5vw,21px);line-height:1.48;margin:0 0 40px}
+.intro{font-size:clamp(17px,1.5vw,21px);line-height:1.48;margin:0 0 30px}
 .timeline{position:relative;padding-left:64px}
 .timeline:before{content:"";position:absolute;left:27px;top:16px;bottom:16px;width:2px;background:#d8f6ff}
 .item{position:relative;margin-bottom:58px}
 .item:last-child{margin-bottom:0}
 .dot{position:absolute;left:-46px;top:32px;width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--cyan)}
-.card{position:relative;width:840px;background:#EEF9FE;border-left:4px solid var(--cyan);border-radius:30px;padding:16px 190px 16px 28px;min-height:118px;box-shadow:0 10px 24px rgba(0,0,0,.05)}
+.card{position:relative;width:840px;background:#EEF9FE;overflow:visible;border-left:4px solid var(--cyan);border-radius:30px;padding:16px 190px 16px 28px;min-height:118px;box-shadow:0 10px 24px rgba(0,0,0,.05)}
 .badge{position:absolute;left:-22px;top:10px;width:42px;height:42px;border-radius:50%;border:3px solid var(--cyan);background:#fff;color:var(--cyan);display:flex;align-items:center;justify-content:center;font-weight:700}
-.step{display:inline-block;background:#EAFBFF;color:var(--cyan);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.step{display:inline-block;background:#12cfff;color:#fff;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
 h2{font:34px "Fjalla One";line-height:1.02;color:#000;margin:6px 0}
-.photo{position:absolute;right:-76px;top:-24px;width:170px;height:170px;border-radius:24px;object-fit:cover;border:4px solid #fff;outline:2px solid var(--cyan)}
-.desc{margin-top:8px;font-size:15px;line-height:1.55}
+.photo{position:absolute;right:-32px;top:50%;transform:translateY(-50%);width:170px;height:170px;border-radius:24px;object-fit:cover;border:4px solid #fff;outline:2px solid var(--cyan)}
+.desc{margin-top:8px;font-size:18px;line-height:1.55}
 @media(max-width:768px){
 .wrap{padding:0 22px 20px 8px}
-.intro{font-size:16px;line-height:1.38;margin:0 0 24px}
+.intro{font-size:16px;line-height:1.38;margin:0 0 15px}
 .timeline{padding-left:48px}
 .timeline:before{left:17px}
 .dot{left:-33px;top:24px;width:13px;height:13px}
@@ -36,10 +36,10 @@ h2{font:34px "Fjalla One";line-height:1.02;color:#000;margin:6px 0}
 .badge{left:-28px;top:6px;width:36px;height:36px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .content{flex:1}
-.step{font-size:10px}
+.step{font-size:9px}
 h2{font-size:22px;line-height:1.02;margin:4px 0}
-.photo{position:relative;top:-8px;right:auto;transform:translateX(8px);width:92px;height:92px;flex:0 0 92px}
-.desc{margin-top:6px;font-size:14px;line-height:1.45;width:100%}
+.photo{position:absolute;top:-24px;right:-24px;width:92px;height:92px;z-index:5;}
+.desc{margin-top:6px;font-size:16px;line-height:1.45;width:100%}
 }
 </style>
 </head>
@@ -56,7 +56,7 @@ h2{font-size:22px;line-height:1.02;margin:4px 0}
 </div>
 <img class="photo" src="https://pay.kushalonline.com/images/step1.jpg" alt="Choose Your Plan" loading="lazy">
 </div>
-<p class="desc">Select a treatment plan, share your basic details and health concerns, and complete your secure payment.</p>
+<p class="desc">Select a treatment plan, share your details and health concerns and make secure payment.</p>
 </div></div>
 
 <div class="item"><div class="dot"></div><div class="card">
@@ -80,6 +80,6 @@ h2{font-size:22px;line-height:1.02;margin:4px 0}
 </div>
 <img class="photo" src="https://pay.kushalonline.com/images/step3.jpg" alt="Receive Your Medicines" loading="lazy">
 </div>
-<p class="desc">Medicines are delivered to your doorstep with clear dosage instructions for a smooth treatment experience.</p>
+<p class="desc">Medicines are delivered to your doorstep with clear dosage instructions.</p>
 </div></div>
 </div></section></body></html>
