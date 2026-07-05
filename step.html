@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kushal Online Premium Timeline v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--c:#12CFFF;--card:#F4FBFF;--txt:#444;--r:30px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Roboto,sans-serif;background:#fff;color:var(--txt)}
+.wrap{max-width:1120px;margin:auto;padding:20px 18px}
+.intro{font-size:clamp(18px,2vw,23px);line-height:1.8;max-width:760px;margin-bottom:18px}
+.timeline{position:relative;padding-left:72px}
+.timeline:before{content:"";position:absolute;left:29px;top:10px;bottom:16px;width:2px;background:linear-gradient(#eefcff,#12CFFF,#eefcff)}
+.item{position:relative;margin-bottom:20px}
+.item:last-child{margin-bottom:0}
+.node{position:absolute;left:-51px;top:42px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--c);box-shadow:0 0 0 6px rgba(18,207,255,.08)}
+.card{position:relative;background:linear-gradient(180deg,#fff,#f4fbff);border-left:4px solid var(--c);border-radius:30px;padding:20px 200px 20px 30px;min-height:145px;box-shadow:0 10px 24px rgba(0,0,0,.05),0 26px 60px rgba(18,207,255,.10)}
+.badge{position:absolute;left:-22px;top:16px;width:44px;height:44px;border-radius:50%;background:#fff;border:3px solid var(--c);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--c)}
+.step{display:inline-block;background:#eefdff;color:var(--c);padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1.5px;margin-bottom:10px}
+/* Extra spacing so heading never touches the badge */
+h2{font:400 clamp(26px,2vw,34px) "Fjalla One",sans-serif;color:#000;line-height:1.1;margin:0 0 10px;padding-right:14px}
+p{font-size:16px;line-height:1.6;max-width:95%}
+img{position:absolute;right:-84px;top:50%;transform:translateY(-56%);width:205px;height:205px;object-fit:cover;border-radius:30px;border:5px solid #fff;outline:2px solid var(--c);box-shadow:0 18px 40px rgba(0,0,0,.16)}
+@media(max-width:768px){
+.wrap{padding:16px 14px}
+.timeline{padding-left:50px}.timeline:before{left:18px}.node{left:-34px;top:38px;width:14px;height:14px}
+.card{padding:18px 118px 18px 36px;min-height:128px;border-radius:24px}
+/* Move badge further left to create clear gap */
+.badge{left:-28px;top:14px;width:36px;height:36px;font-size:18px}
+/* Push text away from badge */
+.step{margin-left:4px;font-size:10px;padding:5px 10px}
+h2{font-size:21px;margin-top:2px;padding-right:8px}
+p{font-size:14px;line-height:1.55}
+img{width:138px;height:138px;right:-28px;border-radius:22px}
+}
+</style>
+</head>
+<body>
+<section class="wrap">
+<p class="intro">A simple, guided process designed to make personalized homeopathic treatment convenient from the comfort of your home.</p>
+<div class="timeline">
+
+<div class="item"><div class="node"></div><article class="card"><div class="badge">1</div><div class="step">STEP NO 1</div><h2>Choose Your Plan</h2><p>Select a treatment plan, share your basic details and health concerns, and complete your secure payment.</p><img src="https://pay.kushalonline.com/image/step1.jpg" alt="Choose your plan"></article></div>
+
+<div class="item"><div class="node"></div><article class="card"><div class="badge">2</div><div class="step">STEP NO 2</div><h2>Share Case Details</h2><p>Our doctors review your case, gather additional details, and finalize your prescription.</p><img src="https://pay.kushalonline.com/image/step2.jpg" alt="Share case details"></article></div>
+
+<div class="item"><div class="node"></div><article class="card"><div class="badge">3</div><div class="step">STEP NO 3</div><h2>Receive Your Medicines</h2><p>Medicines are delivered to your doorstep with clear dosage instructions for a smooth treatment experience.</p><img src="https://pay.kushalonline.com/image/step3.jpg" alt="Receive medicines"></article></div>
+
+</div>
+</section>
+</body>
+</html>
