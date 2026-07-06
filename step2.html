@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Online Treatment Section - Production</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Roboto',sans-serif;
+    background:#fff;
+    color:#222;
+}
+.section{
+    width:min(66%,1040px);
+    margin:48px auto;
+    background:#fff;
+}
+.card{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin:38px 0;
+    padding:18px 20px;
+    min-height:176px;
+    background:#EEF9FE;
+    border-radius:30px;
+    box-shadow:0 10px 24px rgba(0,0,0,.08);
+}
+.badge{
+    position:absolute;
+    left:-18px;
+    top:-14px;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid #12CFFF;
+    color:#12CFFF;
+    font:700 20px 'Roboto',sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 16px rgba(0,0,0,.12);
+}
+.content{
+    flex:1;
+    padding-left:18px;
+}
+h3{
+    font-family:'Fjalla One',sans-serif;
+    font-size:1.52rem;
+    font-weight:400;
+    line-height:1;
+    white-space:nowrap;
+    margin-bottom:10px;
+    letter-spacing:.2px;
+}
+p{
+    font-family:'Roboto',sans-serif;
+    font-size:1.02rem;
+    line-height:1.32;
+    color:#505050;
+}
+.photo{
+    width:112px;
+    height:112px;
+    border-radius:22px;
+    border:4px solid #12CFFF;
+    object-fit:cover;
+    flex-shrink:0;
+    margin-right:6px;
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+.cta{
+    margin-top:24px;
+    padding:38px 28px;
+    border-radius:30px;
+    background:linear-gradient(180deg,#12CFFF,#58B8E8);
+    text-align:center;
+    box-shadow:0 12px 28px rgba(18,207,255,.28);
+}
+.cta h2{
+    font-family:'Fjalla One',sans-serif;
+    color:#000;
+    font-size:2.05rem;
+    font-weight:400;
+    margin-bottom:14px;
+}
+.cta p{
+    max-width:650px;
+    margin:0 auto;
+    line-height:1.45;
+}
+.btn{
+    display:inline-block;
+    margin-top:28px;
+    width:min(90%,430px);
+    padding:19px 28px;
+    background:#000;
+    color:#12CFFF;
+    border-radius:999px;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:700;
+    letter-spacing:.4px;
+}
+@media(max-width:768px){
+.section{
+    width:89%;
+    margin:24px auto;
+}
+.card{
+    gap:14px;
+    min-height:158px;
+    padding:16px;
+    margin:36px 0;
+}
+.badge{
+    width:38px;
+    height:38px;
+    left:-14px;
+    top:-12px;
+    font-size:17px;
+}
+.content{
+    padding-left:16px;
+}
+h3{
+    font-size:1.16rem;
+}
+p{
+    font-size:.95rem;
+    line-height:1.26;
+}
+.photo{
+    width:88px;
+    height:88px;
+    margin-right:2px;
+}
+.cta{
+    padding:34px 20px;
+}
+.cta h2{
+    font-size:1.9rem;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="section">
+
+<div class="card">
+<div class="badge">1</div>
+<div class="content">
+<h3>Choose Your Plan</h3>
+<p>Select the treatment plan that best suits your needs and begin your personalized homeopathic care.</p>
+</div>
+<img class="photo" src="step1.jpg" alt="">
+</div>
+
+<div class="card">
+<div class="badge">2</div>
+<div class="content">
+<h3>Share Case Details</h3>
+<p>Complete the detailed case history form and upload previous medical reports for an accurate assessment.</p>
+</div>
+<img class="photo" src="step2.jpg" alt="">
+</div>
+
+<div class="card">
+<div class="badge">3</div>
+<div class="content">
+<h3>Receive Medicines</h3>
+<p>Your medicines are delivered to your doorstep with regular follow-ups to monitor your progress.</p>
+</div>
+<img class="photo" src="step3.jpg" alt="">
+</div>
+
+<div class="cta">
+<h2>Start Your Online Treatment</h2>
+<p>Choose a treatment plan and begin personalized homeopathic care from experienced doctors.</p>
+<a href="#" class="btn">CHOOSE YOUR TREATMENT PLAN</a>
+</div>
+
+</div>
+
+</body>
+</html>
