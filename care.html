@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Personalized Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Roboto,sans-serif;background:#12CFFF;color:#000}
+.section{padding:72px 20px}
+.container{max-width:1200px;margin:auto}
+.title{font-family:'Fjalla One',sans-serif;font-size:48px;font-weight:400;text-align:center;line-height:1.2;margin-bottom:60px;color:#000}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+.item{text-align:center}
+.icon-box{
+width:108px;height:108px;
+margin:0 auto 24px;
+background:#EEF9FE;
+border-radius:24px;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 10px 26px rgba(0,0,0,.06);
+border:1px solid rgba(18,207,255,.15);
+}
+.icon-box img{width:48px;height:48px;display:block}
+.item h3{font-family:'Fjalla One',sans-serif;font-size:33px;font-weight:400;color:#000;margin-bottom:14px}
+.item p{
+font-size:20px;
+line-height:1.45;
+color:#000;
+max-width:330px;
+margin:0 auto;
+}
+@media(max-width:991px){
+.grid{grid-template-columns:1fr;gap:56px}
+.title{font-size:36px;margin-bottom:46px}
+.item h3{font-size:28px}
+.item p{font-size:18px;line-height:1.45;max-width:520px}
+}
+@media(max-width:576px){
+.section{padding:56px 20px}
+.title{font-size:29px}
+.icon-box{width:90px;height:90px;border-radius:20px}
+.icon-box img{width:40px;height:40px}
+.item h3{font-size:25px}
+.item p{font-size:18px;line-height:1.4}
+}
+</style>
+</head>
+<body>
+<section class="section">
+<div class="container">
+<h2 class="title">Personalized Care, Delivered Online</h2>
+<div class="grid">
+<div class="item">
+<div class="icon-box"><img src="https://pay.kushalonline.com/images/shield-user.svg" alt=""></div>
+<h3>Complete Privacy</h3>
+<p>Confidential consultations with complete respect for your privacy and personal information.</p>
+</div>
+<div class="item">
+<div class="icon-box"><img src="https://pay.kushalonline.com/images/stethoscope.svg" alt=""></div>
+<h3>Direct Doctor Access</h3>
+<p>Direct communication with your homeopathic doctor without unnecessary intermediaries.</p>
+</div>
+<div class="item">
+<div class="icon-box"><img src="https://pay.kushalonline.com/images/clipboard-plus.svg" alt=""></div>
+<h3>Personalized Approach</h3>
+<p>Personalized treatment planned according to your individual health condition.</p>
+</div>
+</div>
+</div>
+</section>
+</body>
+</html>
