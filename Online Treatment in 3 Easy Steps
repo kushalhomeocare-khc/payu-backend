@@ -62,7 +62,7 @@ h2{font-size:20px;margin-bottom:10px}
 </head>
 <body>
 <section class="wrap">
-<p class="intro">A simple, guided process designed to make personalized homeopathic treatment convenient from the comfort of your home.</p>
+<p class="intro">Begin your personalized homeopathic treatment from the comfort of your home.</p>
 
 <div class="card"><div class="badge">1</div>
 <img class="photo" src="https://api.kushalonline.com/image/step1.jpg" alt="">
@@ -87,13 +87,13 @@ h2{font-size:20px;margin-bottom:10px}
 
 </section>
 <section class="cta">
-<h3>Start Your Online Treatment</h3>
-<p>Choose a treatment plan and begin personalized homeopathic care from experienced doctors.</p>
+<h3>Start Online Treatment</h3>
+<p>Choose the treatment plan that best suits your needs and begin your journey to better health.</p>
 <a class="btn"
    href="https://kushalonline.com/start-online-treatment"
    target="_top"
    rel="noopener">
-   CHOOSE YOUR TREATMENT PLAN
+   EXPLORE TREATMENT PLANS
 </a>
 </section>
 </body></html>
