@@ -89,6 +89,11 @@ h2{font-size:20px;margin-bottom:10px}
 <section class="cta">
 <h3>Start Your Online Treatment</h3>
 <p>Choose a treatment plan and begin personalized homeopathic care from experienced doctors.</p>
-<a class="btn" href="https://kushalonline.com/start-online-treatment">CHOOSE YOUR TREATMENT PLAN</a>
+<a class="btn"
+   href="https://kushalonline.com/start-online-treatment"
+   target="_top"
+   rel="noopener">
+   CHOOSE YOUR TREATMENT PLAN
+</a>
 </section>
 </body></html>
