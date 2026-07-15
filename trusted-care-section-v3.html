@@ -11,7 +11,7 @@
     --bg:#12cfff;
     --panel:#ffffff;
     --ink:#0b2430;
-    --ink-soft:#3c5560;
+    --ink-soft:#2a3b42;
     --gold:#a9814f;
     --line:#dfe6e8;
   }
@@ -33,21 +33,21 @@
   }
   .photo{
     width:100%;
-    height:260px;
+    aspect-ratio:2.4/1;
     object-fit:cover;
     border-radius:18px;
     display:block;
-    box-shadow:0 20px 45px -22px rgba(6,40,55,0.4);
+    box-shadow:0 10px 22px -14px rgba(6,40,55,0.25);
   }
   h1{
     font-family:'Fjalla One',sans-serif;
     font-weight:400;
     letter-spacing:0.01em;
-    font-size:clamp(36px,4.4vw,46px);
+    font-size:clamp(48px,4.8vw,58px);
     line-height:1.15;
     text-align:center;
-    margin:28px auto;
-    color:#08202c;
+    margin:34px auto;
+    color:#000000;
   }
   .panel{
     background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(205,238,251,0.45));
@@ -55,7 +55,7 @@
     -webkit-backdrop-filter:blur(18px);
     border:1px solid rgba(255,255,255,0.55);
     border-radius:28px;
-    box-shadow:0 25px 50px -22px rgba(6,40,55,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    box-shadow:0 12px 24px -16px rgba(6,40,55,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
     overflow:hidden;
   }
   .grid{
@@ -86,26 +86,31 @@
     font-family:'Fjalla One',sans-serif;
     font-weight:400;
     letter-spacing:0.02em;
-    font-size:17px;
-    margin:0 0 6px;
+    font-size:clamp(44px,4.36vw,53px);
+    line-height:1.1;
+    margin:0 0 10px;
     color:#0b2430;
   }
   p{
-    font-size:13.5px;
-    line-height:1.5;
+    font-size:17.5px;
+    line-height:1.45;
     color:var(--ink-soft);
     margin:0;
   }
   @media (max-width:760px){
     .grid{ grid-template-columns:1fr; }
-    .card{ border-left:none; border-top:1px solid rgba(255,255,255,0.55); padding:24px 22px; }
+    .card{ border-left:none; border-top:1px solid rgba(255,255,255,0.55); padding:20px 10px; gap:10px; }
     .card:first-child{ border-top:none; }
+    .icon{ width:36px; height:36px; }
+    .icon svg{ width:18px; height:18px; }
     .wrap{ padding:2px 14px; }
+    p{ font-size:16.5px; }
+    h3{ font-size:20px; }
     h1{
-      font-size:18px;
+      font-size:22px;
       letter-spacing:-0.015em;
       white-space:nowrap;
-      margin:12px auto 20px;
+      margin:18px auto;
     }
   }
 </style>
@@ -154,7 +159,7 @@
         </div>
         <div>
           <h3>Ethics</h3>
-          <p>Honest guidance. Realistic expectations. Patient-first care.</p>
+          <p>Honest guidance with realistic expectations and patient-first recommendations.</p>
         </div>
       </div>
     </div>
