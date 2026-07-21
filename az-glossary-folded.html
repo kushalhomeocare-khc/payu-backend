@@ -1,0 +1,2813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-Z Glossary — Folded</title>
+<style>
+  :root{
+    --sky-top:#5FCBF5;
+    --sky-bottom:#28A9E0;
+    --navy:#123047;
+    --navy-soft:#3d5a70;
+    --gold:#F0B429;
+    --gold-soft:#F7CE6B;
+    --glass-bg:rgba(255,255,255,0.22);
+    --glass-border:rgba(255,255,255,0.45);
+    --footer-dark:#0C2233;
+  }
+  *{box-sizing:border-box;}
+  .az-section{
+    background:#12CFFF;
+    margin:0 2px;
+    padding:20px 0 90px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--navy);
+    line-height:1.5;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px;}
+
+  /* intro helper text */
+  .intro-text{
+    text-align:center;
+    color:#ffffff;
+    font-size:16px;
+    margin:4px 4px 18px;
+    opacity:0.9;
+  }
+
+  /* search */
+  /* shared light-blue "block" style used by search box, A-Z block, and disease cards */
+  .glass-block{
+    background:#BFEFFC;
+    border:1px solid rgba(255,255,255,0.7);
+    border-radius:16px;
+    box-shadow:0 6px 18px rgba(15,70,100,0.15);
+  }
+
+  .search-glass{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 16px;
+    margin-bottom:16px;
+  }
+  .search-glass svg{flex:none;opacity:0.6;}
+  .search-glass input{
+    border:none;background:transparent;outline:none;
+    font-size:16px;color:var(--navy);width:100%;font-family:inherit;
+  }
+  .search-glass input::placeholder{color:rgba(18,48,71,0.55);}
+  .clear-btn{
+    display:none;border:none;background:rgba(18,48,71,0.12);
+    color:var(--navy);border-radius:50%;
+    width:22px;height:22px;font-size:13px;cursor:pointer;line-height:1;
+  }
+
+  /* A-Z block wrapper */
+  .az-block{
+    padding:14px;
+    margin-bottom:16px;
+  }
+  .az-grid-wrap{
+    overflow:hidden;
+    transition:max-height .3s ease;
+    max-height:600px;
+  }
+  .az-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:8px;
+  }
+  .az-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    width:100%;
+    background:none;
+    border:none;
+    padding:10px 0 2px;
+    color:var(--navy-soft);
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .az-toggle svg{
+    width:15px;height:15px;
+    transition:transform .25s ease;
+  }
+  .az-block.collapsed .az-toggle svg{transform:rotate(0deg);}
+  .az-block:not(.collapsed) .az-toggle svg{transform:rotate(180deg);}
+  .az-btn{
+    aspect-ratio:1;
+    background:#12CFFF;
+    border:1px solid rgba(255,255,255,0.5);
+    border-radius:14px;
+    box-shadow:0 4px 12px rgba(15,70,100,0.15);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    font-size:16px;
+    color:#0C3A52;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease, transform .15s ease;
+  }
+  .az-btn:hover{transform:translateY(-1px);}
+  .az-btn.disabled{
+    background:#12CFFF;
+    color:rgba(12,58,82,0.35);
+    opacity:0.55;
+    pointer-events:none;
+    box-shadow:none;
+  }
+  .az-btn.active{
+    background:linear-gradient(160deg, #2E8FC0 0%, #1A5F85 100%);
+    color:#ffffff;
+    box-shadow:0 8px 20px rgba(15,70,100,0.4);
+  }
+
+  .no-results{
+    display:none;
+    text-align:center;
+    color:rgba(255,255,255,0.9);
+    font-weight:600;
+    padding:20px 10px;
+  }
+
+  /* letter card - hidden until its A-Z button is tapped */
+  .letter-card{
+    display:none;
+    width:100%;
+    box-sizing:border-box;
+    background:#BFEFFC;
+    border:1px solid rgba(255,255,255,0.7);
+    border-radius:20px;
+    box-shadow:0 6px 18px rgba(15,70,100,0.15);
+    padding:8px 16px;
+    opacity:0;
+    transition:opacity .18s ease;
+  }
+  .letter-card.show{display:block;}
+  .letter-card.visible{opacity:1;}
+
+  .card-stage{
+    position:relative;
+    transition:height .2s ease;
+    overflow:hidden;
+  }
+  .letter-heading{
+    color:var(--footer-dark);
+    font-size:20px;
+    font-weight:800;
+    margin:0;
+    padding:14px 4px 10px;
+  }
+
+  /* condition accordion item (name always visible, description folds) */
+  .accordion-item{border-top:1px solid rgba(18,48,71,0.12);}
+  .accordion-item:last-child{padding-bottom:6px;}
+  .accordion-trigger{
+    width:100%;background:none;border:none;text-align:left;
+    padding:14px 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    cursor:pointer;font-family:inherit;
+  }
+  .accordion-trigger .name{font-size:15.5px;font-weight:700;color:var(--navy);}
+  .chev{flex:none;width:18px;height:18px;transition:transform .25s ease;color:var(--navy-soft);}
+  .accordion-item.open .chev{transform:rotate(180deg);}
+  .accordion-panel{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .accordion-item.open .accordion-panel{max-height:200px;}
+  .accordion-panel .panel-inner{
+    display:flex;align-items:flex-start;gap:10px;
+    margin:0 4px 16px;
+  }
+  .accordion-panel p{margin:0;font-size:14px;color:var(--navy-soft);flex:1;}
+
+  /* icon-only CTA link */
+  .cta-icon{
+    flex:none;
+    width:30px;height:30px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg, #7ED8F7 0%, #2E8FC0 100%);
+    color:#ffffff;
+    box-shadow:0 4px 12px rgba(15,70,100,0.3);
+    text-decoration:none;
+  }
+  .cta-icon svg{width:15px;height:15px;}
+  .cta-icon:hover{filter:brightness(1.05);}
+</style>
+</head>
+<body style="margin:0;">
+<div class="az-section" id="top">
+<div class="wrap">
+
+  <p class="intro-text">Search for your condition using the search box below, or browse the conditions using the alphabetical buttons.</p>
+
+  <div class="search-glass glass-block">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search conditions...">
+    <button class="clear-btn" id="clearBtn" aria-label="Clear search">✕</button>
+  </div>
+
+  <div class="az-block glass-block" id="azBlock">
+    <div class="az-grid-wrap" id="azGridWrap">
+      <div class="az-grid" id="azGrid">
+        <button class="az-btn" data-letter="A">A</button>
+        <button class="az-btn" data-letter="B">B</button>
+        <button class="az-btn" data-letter="C">C</button>
+        <button class="az-btn" data-letter="D">D</button>
+        <button class="az-btn" data-letter="E">E</button>
+        <button class="az-btn" data-letter="F">F</button>
+        <button class="az-btn" data-letter="G">G</button>
+        <button class="az-btn" data-letter="H">H</button>
+        <button class="az-btn" data-letter="I">I</button>
+        <button class="az-btn" data-letter="J">J</button>
+        <button class="az-btn" data-letter="K">K</button>
+        <button class="az-btn" data-letter="L">L</button>
+        <button class="az-btn" data-letter="M">M</button>
+        <button class="az-btn" data-letter="N">N</button>
+        <button class="az-btn" data-letter="O">O</button>
+        <button class="az-btn" data-letter="P">P</button>
+        <button class="az-btn disabled" disabled>Q</button>
+        <button class="az-btn" data-letter="R">R</button>
+        <button class="az-btn" data-letter="S">S</button>
+        <button class="az-btn" data-letter="T">T</button>
+        <button class="az-btn" data-letter="U">U</button>
+        <button class="az-btn" data-letter="V">V</button>
+        <button class="az-btn" data-letter="W">W</button>
+        <button class="az-btn disabled" disabled>X</button>
+        <button class="az-btn disabled" disabled>Y</button>
+        <button class="az-btn disabled" disabled>Z</button>
+      </div>
+    </div>
+    <button class="az-toggle" id="azToggle" aria-label="Collapse alphabet list">
+      <span id="azToggleLabel">Collapse</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+  <p class="no-results" id="noResults">No conditions match your search.</p>
+
+  <div id="glossary" class="card-stage">
+
+    <section class="letter-card" data-letter="A">
+      <h2 class="letter-heading">A</h2>
+
+      <div class="accordion-item" data-name="acidity">
+        <button class="accordion-trigger">
+          <span class="name">Acidity</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A burning sensation in the stomach or chest due to excess gastric acid.</p>
+            <!-- No treatment link yet for "Acidity". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="acne|pimples">
+        <button class="accordion-trigger">
+          <span class="name">Acne (Pimples)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammatory skin condition caused by clogged pores, leading to pimples and eruptions.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#cbe317b6-79dd-4b6b-8bbd-9dbaed55e45d" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="adenoids">
+        <button class="accordion-trigger">
+          <span class="name">Adenoids</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Enlarged lymph tissue causing nasal blockage and mouth breathing, especially in children.</p>
+            <!-- No treatment link yet for "Adenoids". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="adhd|attention deficit hyperactivity disorder">
+        <button class="accordion-trigger">
+          <span class="name">ADHD (Attention Deficit Hyperactivity Disorder)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A neurodevelopmental disorder causing inattention, hyperactivity, and impulsive behavior.</p>
+            <a class="cta-icon" href="https://kushalonline.com/adhd-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="allergic rhinitis">
+        <button class="accordion-trigger">
+          <span class="name">Allergic Rhinitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An allergic condition causing sneezing, runny nose, and nasal irritation.</p>
+            <!-- No treatment link yet for "Allergic Rhinitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="alopecia">
+        <button class="accordion-trigger">
+          <span class="name">Alopecia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Hair loss from the scalp or body due to various underlying causes.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#75323daf-79e3-4ada-a03c-30b9d3e4af71" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="amoebiasis">
+        <button class="accordion-trigger">
+          <span class="name">Amoebiasis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An intestinal infection causing diarrhea, abdominal pain, and discomfort.</p>
+            <!-- No treatment link yet for "Amoebiasis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="anal fissure">
+        <button class="accordion-trigger">
+          <span class="name">Anal Fissure</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A small tear in the anal lining causing pain and bleeding during bowel movements.</p>
+            <!-- No treatment link yet for "Anal Fissure". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="anal fistula">
+        <button class="accordion-trigger">
+          <span class="name">Anal Fistula</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An abnormal tunnel near the anus causing discharge and recurrent infection.</p>
+            <!-- No treatment link yet for "Anal Fistula". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="anal warts">
+        <button class="accordion-trigger">
+          <span class="name">Anal Warts</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Viral growths around the anal area caused by HPV infection.</p>
+            <!-- No treatment link yet for "Anal Warts". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="ankylosing spondylitis">
+        <button class="accordion-trigger">
+          <span class="name">Ankylosing Spondylitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic inflammatory condition of the spine causing stiffness and reduced mobility.</p>
+            <a class="cta-icon" href="https://kushalonline.com/ankylosing-spondylitis" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="anxiety">
+        <button class="accordion-trigger">
+          <span class="name">Anxiety</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A mental health condition marked by excessive worry, fear, and nervousness.</p>
+            <a class="cta-icon" href="https://kushalonline.com/anxiety-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="arthritis">
+        <button class="accordion-trigger">
+          <span class="name">Arthritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of joints causing pain, swelling, and stiffness.</p>
+            <!-- No treatment link yet for "Arthritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="asthma">
+        <button class="accordion-trigger">
+          <span class="name">Asthma</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic respiratory condition causing breathing difficulty, wheezing, and coughing.</p>
+            <!-- No treatment link yet for "Asthma". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="autism|autism spectrum disorder">
+        <button class="accordion-trigger">
+          <span class="name">Autism (Autism Spectrum Disorder)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A developmental disorder affecting communication, behaviour, and social interaction.</p>
+            <a class="cta-icon" href="https://kushalonline.com/autism-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="B">
+      <h2 class="letter-heading">B</h2>
+
+      <div class="accordion-item" data-name="baldness">
+        <button class="accordion-trigger">
+          <span class="name">Baldness</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Loss of hair from the scalp, often due to genetic or hormonal factors.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#75323daf-79e3-4ada-a03c-30b9d3e4af71" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="bed wetting|nocturnal enuresis">
+        <button class="accordion-trigger">
+          <span class="name">Bed Wetting (Nocturnal Enuresis)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Involuntary urination during sleep, commonly seen in children.</p>
+            <!-- No treatment link yet for "Bed Wetting (Nocturnal Enuresis)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="bursitis">
+        <button class="accordion-trigger">
+          <span class="name">Bursitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of fluid-filled sacs (bursae) around joints causing pain and swelling.</p>
+            <!-- No treatment link yet for "Bursitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="bph|benign prostatic hyperplasia">
+        <button class="accordion-trigger">
+          <span class="name">BPH (Benign Prostatic Hyperplasia)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Non-cancerous enlargement of the prostate causing urinary difficulty in men.</p>
+            <!-- No treatment link yet for "BPH (Benign Prostatic Hyperplasia)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="bronchitis">
+        <button class="accordion-trigger">
+          <span class="name">Bronchitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the airways causing persistent cough, mucus, and breathing discomfort.</p>
+            <!-- No treatment link yet for "Bronchitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="C">
+      <h2 class="letter-heading">C</h2>
+
+      <div class="accordion-item" data-name="cervical spondylitis">
+        <button class="accordion-trigger">
+          <span class="name">Cervical Spondylitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Degenerative changes in the neck causing pain, stiffness, and reduced movement.</p>
+            <a class="cta-icon" href="https://kushalonline.com/diseas-cervical-spondylos" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="chalazion">
+        <button class="accordion-trigger">
+          <span class="name">Chalazion</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A painless, localized swelling on the eyelid due to blocked oil glands.</p>
+            <!-- No treatment link yet for "Chalazion". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="chickenpox">
+        <button class="accordion-trigger">
+          <span class="name">Chickenpox</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A contagious viral infection causing itchy fluid-filled blisters and fever.</p>
+            <!-- No treatment link yet for "Chickenpox". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="cholecystitis">
+        <button class="accordion-trigger">
+          <span class="name">Cholecystitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the gallbladder causing abdominal pain, nausea, and fever.</p>
+            <!-- No treatment link yet for "Cholecystitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="cholelithiasis">
+        <button class="accordion-trigger">
+          <span class="name">Cholelithiasis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Formation of stones in the gallbladder, which may cause pain or remain silent.</p>
+            <!-- No treatment link yet for "Cholelithiasis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="cold|common cold">
+        <button class="accordion-trigger">
+          <span class="name">Cold (Common Cold)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A viral infection causing runny nose, sneezing, and mild throat irritation.</p>
+            <!-- No treatment link yet for "Cold (Common Cold)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="colitis">
+        <button class="accordion-trigger">
+          <span class="name">Colitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the colon causing diarrhea, abdominal pain, and discomfort.</p>
+            <a class="cta-icon" href="https://kushalonline.com/ibs-%26-colitis" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="constipation">
+        <button class="accordion-trigger">
+          <span class="name">Constipation</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Difficulty in passing stool, often with hard or infrequent bowel movements.</p>
+            <!-- No treatment link yet for "Constipation". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="corn">
+        <button class="accordion-trigger">
+          <span class="name">Corn</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A thickened area of skin caused by repeated pressure or friction.</p>
+            <!-- No treatment link yet for "Corn". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="cough">
+        <button class="accordion-trigger">
+          <span class="name">Cough</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A protective reflex to clear the airways of irritation or mucus.</p>
+            <!-- No treatment link yet for "Cough". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="csom|chronic suppurative otitis media">
+        <button class="accordion-trigger">
+          <span class="name">CSOM (Chronic Suppurative Otitis Media)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A long-standing ear infection with persistent discharge and possible hearing loss.</p>
+            <!-- No treatment link yet for "CSOM (Chronic Suppurative Otitis Media)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="cystitis">
+        <button class="accordion-trigger">
+          <span class="name">Cystitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the bladder causing burning urination, urgency, and discomfort.</p>
+            <!-- No treatment link yet for "Cystitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="D">
+      <h2 class="letter-heading">D</h2>
+
+      <div class="accordion-item" data-name="dandruff">
+        <button class="accordion-trigger">
+          <span class="name">Dandruff</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A scalp condition causing white flakes and itching due to excessive shedding of skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#dc601e18-a9a0-4bc2-840f-b7bfbef568fd" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="depression">
+        <button class="accordion-trigger">
+          <span class="name">Depression</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A mental health disorder causing persistent low mood, loss of interest, and reduced energy.</p>
+            <!-- No treatment link yet for "Depression". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="diabetes mellitus">
+        <button class="accordion-trigger">
+          <span class="name">Diabetes Mellitus</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A metabolic disorder with high blood sugar due to impaired insulin function.</p>
+            <!-- No treatment link yet for "Diabetes Mellitus". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="dub|dysfunctional uterine bleeding">
+        <button class="accordion-trigger">
+          <span class="name">DUB (Dysfunctional Uterine Bleeding)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Abnormal uterine bleeding not related to pregnancy or identifiable pathology.</p>
+            <!-- No treatment link yet for "DUB (Dysfunctional Uterine Bleeding)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="duodenal ulcer">
+        <button class="accordion-trigger">
+          <span class="name">Duodenal Ulcer</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A sore in the upper part of the intestine causing burning abdominal pain.</p>
+            <!-- No treatment link yet for "Duodenal Ulcer". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="E">
+      <h2 class="letter-heading">E</h2>
+
+      <div class="accordion-item" data-name="elephantiasis">
+        <button class="accordion-trigger">
+          <span class="name">Elephantiasis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Severe swelling of body parts due to lymphatic obstruction, often caused by infection.</p>
+            <!-- No treatment link yet for "Elephantiasis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="eczema">
+        <button class="accordion-trigger">
+          <span class="name">Eczema</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic skin condition causing itching, redness, and dry, inflamed skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#105a2f42-6d3b-47f3-bdff-b5711dc9461a" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="endometriosis">
+        <button class="accordion-trigger">
+          <span class="name">Endometriosis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A condition where tissue similar to the uterine lining grows outside the uterus, causing pain and irregular periods.</p>
+            <!-- No treatment link yet for "Endometriosis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="epilepsy">
+        <button class="accordion-trigger">
+          <span class="name">Epilepsy</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A neurological disorder characterized by recurrent seizures.</p>
+            <!-- No treatment link yet for "Epilepsy". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="erectile dysfunction">
+        <button class="accordion-trigger">
+          <span class="name">Erectile Dysfunction</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inability to achieve or maintain an erection sufficient for sexual activity.</p>
+            <a class="cta-icon" href="https://kushalonline.com/erectile-dysfunction" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="F">
+      <h2 class="letter-heading">F</h2>
+
+      <div class="accordion-item" data-name="fatty liver">
+        <button class="accordion-trigger">
+          <span class="name">Fatty Liver</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Excess fat accumulation in the liver affecting its normal function.</p>
+            <a class="cta-icon" href="https://kushalonline.com/digestive-%26-liver#ff77109e-154e-45a8-976f-8a51a74ae37a" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fibroadenoma">
+        <button class="accordion-trigger">
+          <span class="name">Fibroadenoma</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A benign breast lump commonly seen in young women.</p>
+            <!-- No treatment link yet for "Fibroadenoma". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fibroid uterus">
+        <button class="accordion-trigger">
+          <span class="name">Fibroid Uterus</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Non-cancerous growths in the uterus causing heavy bleeding and pelvic discomfort.</p>
+            <!-- No treatment link yet for "Fibroid Uterus". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fibromyalgia">
+        <button class="accordion-trigger">
+          <span class="name">Fibromyalgia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic condition causing widespread body pain, fatigue, and tender points.</p>
+            <!-- No treatment link yet for "Fibromyalgia". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fissure-in-ano">
+        <button class="accordion-trigger">
+          <span class="name">Fissure-in-Ano</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A painful crack in the anal region causing bleeding during bowel movements.</p>
+            <!-- No treatment link yet for "Fissure-in-Ano". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fistula-in-ano">
+        <button class="accordion-trigger">
+          <span class="name">Fistula-in-Ano</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An abnormal tract near the anus causing discharge and recurrent infection.</p>
+            <a class="cta-icon" href="https://kushalonline.com/piles-%26-fistula#0e126f54-328a-4f0a-9016-dfb355e3ecf9" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="frequent colds">
+        <button class="accordion-trigger">
+          <span class="name">Frequent Colds</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Repeated episodes of common cold due to lowered immunity or exposure to infections.</p>
+            <!-- No treatment link yet for "Frequent Colds". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fungal infections">
+        <button class="accordion-trigger">
+          <span class="name">Fungal Infections</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Skin infections caused by fungi leading to itching, redness, and irritation.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#6acf8fc5-6e00-45e8-a18c-21f6a8803f8c" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="fungal nail infection">
+        <button class="accordion-trigger">
+          <span class="name">Fungal Nail Infection</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A fungal infection causing thickened, discolored, and brittle nails.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#ba402355-06e1-4e8a-a426-3beae7f452e4" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="G">
+      <h2 class="letter-heading">G</h2>
+
+      <div class="accordion-item" data-name="gall bladder stones">
+        <button class="accordion-trigger">
+          <span class="name">Gall Bladder Stones</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Hard deposits formed in the gallbladder, often causing abdominal pain and discomfort.</p>
+            <!-- No treatment link yet for "Gall Bladder Stones". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="ganglion">
+        <button class="accordion-trigger">
+          <span class="name">Ganglion</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A fluid-filled swelling near joints or tendons, commonly seen on the wrist.</p>
+            <!-- No treatment link yet for "Ganglion". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="gastric ulcer">
+        <button class="accordion-trigger">
+          <span class="name">Gastric Ulcer</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A sore in the stomach lining causing burning pain and discomfort.</p>
+            <!-- No treatment link yet for "Gastric Ulcer". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="gastritis">
+        <button class="accordion-trigger">
+          <span class="name">Gastritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the stomach lining causing pain, acidity, and nausea.</p>
+            <!-- No treatment link yet for "Gastritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="genital warts">
+        <button class="accordion-trigger">
+          <span class="name">Genital Warts</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Viral growths in the genital area caused by HPV infection.</p>
+            <!-- No treatment link yet for "Genital Warts". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="glomerulonephritis">
+        <button class="accordion-trigger">
+          <span class="name">Glomerulonephritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the kidney's filtering units causing swelling, urine changes, and hypertension.</p>
+            <!-- No treatment link yet for "Glomerulonephritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="golfer's elbow">
+        <button class="accordion-trigger">
+          <span class="name">Golfer's Elbow</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Pain and inflammation on the inner side of the elbow due to overuse.</p>
+            <!-- No treatment link yet for "Golfer's Elbow". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="gout">
+        <button class="accordion-trigger">
+          <span class="name">Gout</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A form of arthritis caused by uric acid crystal deposition, leading to severe joint pain.</p>
+            <!-- No treatment link yet for "Gout". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="gynecomastia">
+        <button class="accordion-trigger">
+          <span class="name">Gynecomastia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Enlargement of male breast tissue due to hormonal imbalance.</p>
+            <!-- No treatment link yet for "Gynecomastia". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="H">
+      <h2 class="letter-heading">H</h2>
+
+      <div class="accordion-item" data-name="hair loss|hair fall">
+        <button class="accordion-trigger">
+          <span class="name">Hair Loss (Hair Fall)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Excessive shedding or thinning of hair leading to reduced density or bald patches.</p>
+            <a class="cta-icon" href="https://kushalonline.com/hair-loss-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="headache|migraine">
+        <button class="accordion-trigger">
+          <span class="name">Headache (Migraine)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A severe, recurring headache often accompanied by nausea and sensitivity to light.</p>
+            <a class="cta-icon" href="https://kushalonline.com/migraine-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="haemorrhoids|piles">
+        <button class="accordion-trigger">
+          <span class="name">Haemorrhoids (Piles)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Swollen veins in the anal region causing pain, itching, and bleeding.</p>
+            <a class="cta-icon" href="https://kushalonline.com/piles-%26-fistula" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="hemiplegia">
+        <button class="accordion-trigger">
+          <span class="name">Hemiplegia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Paralysis of one side of the body, usually due to brain injury or stroke.</p>
+            <!-- No treatment link yet for "Hemiplegia". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="herpes simplex">
+        <button class="accordion-trigger">
+          <span class="name">Herpes Simplex</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A viral infection causing painful blisters on the skin or mucous membranes.</p>
+            <!-- No treatment link yet for "Herpes Simplex". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="herpes zoster">
+        <button class="accordion-trigger">
+          <span class="name">Herpes Zoster</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A viral infection causing a painful rash along the course of a nerve.</p>
+            <!-- No treatment link yet for "Herpes Zoster". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="high bp|hypertension">
+        <button class="accordion-trigger">
+          <span class="name">High BP (Hypertension)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A condition of persistently elevated blood pressure increasing health risks.</p>
+            <!-- No treatment link yet for "High BP (Hypertension)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="hyperthyroidism">
+        <button class="accordion-trigger">
+          <span class="name">Hyperthyroidism</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An overactive thyroid gland producing excess hormones, causing weight loss and restlessness.</p>
+            <a class="cta-icon" href="https://kushalonline.com/thyroid-treatment#1fc6f772-a667-4b3f-ad38-0182a1865f9f" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="hypothyroidism">
+        <button class="accordion-trigger">
+          <span class="name">Hypothyroidism</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An underactive thyroid gland leading to fatigue, weight gain, and slow metabolism.</p>
+            <a class="cta-icon" href="https://kushalonline.com/thyroid-treatment#8bb4f61e-0342-4bb4-969c-321f213488b1" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="I">
+      <h2 class="letter-heading">I</h2>
+
+      <div class="accordion-item" data-name="ibs|irritable bowel syndrome">
+        <button class="accordion-trigger">
+          <span class="name">IBS (Irritable Bowel Syndrome)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A functional bowel disorder causing irregular bowel habits with abdominal discomfort and bloating.</p>
+            <a class="cta-icon" href="https://kushalonline.com/ibs-%26-colitis" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="ichthyosis">
+        <button class="accordion-trigger">
+          <span class="name">Ichthyosis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A skin condition causing dry, thickened, scaly skin due to abnormal shedding.</p>
+            <!-- No treatment link yet for "Ichthyosis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="impotence">
+        <button class="accordion-trigger">
+          <span class="name">Impotence</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inability to achieve or maintain an erection sufficient for sexual activity.</p>
+            <!-- No treatment link yet for "Impotence". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="infertility">
+        <button class="accordion-trigger">
+          <span class="name">Infertility</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Difficulty in conceiving despite regular unprotected intercourse.</p>
+            <a class="cta-icon" href="https://kushalonline.com/infertility-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="insomnia">
+        <button class="accordion-trigger">
+          <span class="name">Insomnia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A sleep disorder characterized by difficulty in falling or staying asleep.</p>
+            <!-- No treatment link yet for "Insomnia". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="J">
+      <h2 class="letter-heading">J</h2>
+
+      <div class="accordion-item" data-name="jaundice">
+        <button class="accordion-trigger">
+          <span class="name">Jaundice</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Yellowing of the skin and eyes due to increased bilirubin levels in the blood.</p>
+            <!-- No treatment link yet for "Jaundice". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="joint pain">
+        <button class="accordion-trigger">
+          <span class="name">Joint Pain</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Discomfort or pain in the joints due to inflammation, injury, or degeneration.</p>
+            <!-- No treatment link yet for "Joint Pain". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="juvenile arthritis">
+        <button class="accordion-trigger">
+          <span class="name">Juvenile Arthritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A type of arthritis in children causing joint pain, swelling, and stiffness.</p>
+            <!-- No treatment link yet for "Juvenile Arthritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="K">
+      <h2 class="letter-heading">K</h2>
+
+      <div class="accordion-item" data-name="keloid">
+        <button class="accordion-trigger">
+          <span class="name">Keloid</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Thick, raised scar tissue that grows beyond the original wound.</p>
+            <!-- No treatment link yet for "Keloid". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="kidney stones">
+        <button class="accordion-trigger">
+          <span class="name">Kidney Stones</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Hard deposits in kidneys causing pain and urinary discomfort.</p>
+            <!-- No treatment link yet for "Kidney Stones". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="L">
+      <h2 class="letter-heading">L</h2>
+
+      <div class="accordion-item" data-name="laryngitis">
+        <button class="accordion-trigger">
+          <span class="name">Laryngitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the voice box causing hoarseness and voice loss.</p>
+            <!-- No treatment link yet for "Laryngitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="leucoderma|vitiligo">
+        <button class="accordion-trigger">
+          <span class="name">Leucoderma (Vitiligo)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Loss of skin pigment leading to white patches on the skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/vitiligo-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="lichen planus">
+        <button class="accordion-trigger">
+          <span class="name">Lichen Planus</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An inflammatory skin condition causing itchy, purplish lesions.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#3b570cd6-7570-4190-8acd-e81d87948328" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="lichen planus pigmentosa">
+        <button class="accordion-trigger">
+          <span class="name">Lichen Planus Pigmentosa</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A variant of lichen planus causing dark brown to grayish skin pigmentation.</p>
+            <!-- No treatment link yet for "Lichen Planus Pigmentosa". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="ligament injury">
+        <button class="accordion-trigger">
+          <span class="name">Ligament Injury</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Damage to a ligament causing pain, swelling, and joint instability.</p>
+            <!-- No treatment link yet for "Ligament Injury". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="low bp|hypotension">
+        <button class="accordion-trigger">
+          <span class="name">Low BP (Hypotension)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Reduced blood pressure causing dizziness, weakness, and fainting.</p>
+            <!-- No treatment link yet for "Low BP (Hypotension)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="lumbar spondylitis">
+        <button class="accordion-trigger">
+          <span class="name">Lumbar Spondylitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Degenerative changes in the lower spine causing back pain and stiffness.</p>
+            <!-- No treatment link yet for "Lumbar Spondylitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="loss of libido">
+        <button class="accordion-trigger">
+          <span class="name">Loss of Libido</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Reduced sexual desire due to physical, hormonal, or psychological factors.</p>
+            <!-- No treatment link yet for "Loss of Libido". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="M">
+      <h2 class="letter-heading">M</h2>
+
+      <div class="accordion-item" data-name="measles">
+        <button class="accordion-trigger">
+          <span class="name">Measles</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A highly contagious viral infection causing fever, cough, and a characteristic skin rash.</p>
+            <!-- No treatment link yet for "Measles". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="menopausal syndrome">
+        <button class="accordion-trigger">
+          <span class="name">Menopausal Syndrome</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A group of symptoms like hot flashes and mood changes due to hormonal decline in menopause.</p>
+            <!-- No treatment link yet for "Menopausal Syndrome". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="menstrual disorders">
+        <button class="accordion-trigger">
+          <span class="name">Menstrual Disorders</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Irregular, painful, or heavy menstrual cycles affecting normal reproductive health.</p>
+            <!-- No treatment link yet for "Menstrual Disorders". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="migraine">
+        <button class="accordion-trigger">
+          <span class="name">Migraine</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A severe, throbbing headache often on one side, sometimes with nausea and light sensitivity.</p>
+            <a class="cta-icon" href="https://kushalonline.com/migraine-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="muscle sprain">
+        <button class="accordion-trigger">
+          <span class="name">Muscle Sprain</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Overstretching or injury to muscles causing pain and limited movement.</p>
+            <!-- No treatment link yet for "Muscle Sprain". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="muscular dystrophy">
+        <button class="accordion-trigger">
+          <span class="name">Muscular Dystrophy</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A group of genetic disorders causing progressive muscle weakness and degeneration.</p>
+            <!-- No treatment link yet for "Muscular Dystrophy". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="myoma of uterus">
+        <button class="accordion-trigger">
+          <span class="name">Myoma of Uterus</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A benign tumor of the uterus, also known as uterine fibroid.</p>
+            <!-- No treatment link yet for "Myoma of Uterus". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="N">
+      <h2 class="letter-heading">N</h2>
+
+      <div class="accordion-item" data-name="nasal polyps">
+        <button class="accordion-trigger">
+          <span class="name">Nasal Polyps</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Soft, non-cancerous growths in the nasal passages causing blockage and breathing difficulty.</p>
+            <!-- No treatment link yet for "Nasal Polyps". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="nephrotic syndrome">
+        <button class="accordion-trigger">
+          <span class="name">Nephrotic Syndrome</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A kidney condition causing excessive protein loss in urine, leading to swelling and weakness.</p>
+            <!-- No treatment link yet for "Nephrotic Syndrome". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="O">
+      <h2 class="letter-heading">O</h2>
+
+      <div class="accordion-item" data-name="obesity">
+        <button class="accordion-trigger">
+          <span class="name">Obesity</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Excess body fat accumulation that increases the risk of health problems like diabetes, heart disease, and joint issues.</p>
+            <!-- No treatment link yet for "Obesity". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="obsessive compulsive disorder|ocd">
+        <button class="accordion-trigger">
+          <span class="name">Obsessive Compulsive Disorder (OCD)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A mental health condition marked by unwanted repetitive thoughts (obsessions) and behaviors (compulsions).</p>
+            <!-- No treatment link yet for "Obsessive Compulsive Disorder (OCD)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="oppositional defiant disorder|odd">
+        <button class="accordion-trigger">
+          <span class="name">Oppositional Defiant Disorder (ODD)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A behavioral disorder in children involving persistent defiance, irritability, and disobedience toward authority figures.</p>
+            <!-- No treatment link yet for "Oppositional Defiant Disorder (ODD)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="oral herpes">
+        <button class="accordion-trigger">
+          <span class="name">Oral Herpes</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A viral infection causing painful blisters or sores around the lips and mouth, commonly known as cold sores.</p>
+            <!-- No treatment link yet for "Oral Herpes". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="osteoarthritis">
+        <button class="accordion-trigger">
+          <span class="name">Osteoarthritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A degenerative joint disease where cartilage wears down, leading to pain, stiffness, and reduced movement.</p>
+            <!-- No treatment link yet for "Osteoarthritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="osteomyelitis">
+        <button class="accordion-trigger">
+          <span class="name">Osteomyelitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An infection of the bone causing pain, swelling, and sometimes fever.</p>
+            <!-- No treatment link yet for "Osteomyelitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="osteoporosis">
+        <button class="accordion-trigger">
+          <span class="name">Osteoporosis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A condition where bones become weak and brittle, increasing the risk of fractures.</p>
+            <!-- No treatment link yet for "Osteoporosis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="otitis externa">
+        <button class="accordion-trigger">
+          <span class="name">Otitis Externa</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An infection of the outer ear canal causing pain, itching, and irritation.</p>
+            <!-- No treatment link yet for "Otitis Externa". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="ovarian cyst">
+        <button class="accordion-trigger">
+          <span class="name">Ovarian Cyst</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A fluid-filled sac in or on the ovary, often harmless but sometimes causing pain or menstrual irregularities.</p>
+            <!-- No treatment link yet for "Ovarian Cyst". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="P">
+      <h2 class="letter-heading">P</h2>
+
+      <div class="accordion-item" data-name="pcod|polycystic ovarian disease">
+        <button class="accordion-trigger">
+          <span class="name">PCOD (Polycystic Ovarian Disease)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A hormonal disorder affecting the ovaries, leading to irregular periods and cyst formation.</p>
+            <a class="cta-icon" href="https://kushalonline.com/pcod-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="pelvic inflammatory disease|pid">
+        <button class="accordion-trigger">
+          <span class="name">Pelvic Inflammatory Disease (PID)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An infection of the female reproductive organs causing pelvic pain, discharge, and discomfort.</p>
+            <!-- No treatment link yet for "Pelvic Inflammatory Disease (PID)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="pharyngitis">
+        <button class="accordion-trigger">
+          <span class="name">Pharyngitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the throat causing pain, irritation, and difficulty in swallowing.</p>
+            <!-- No treatment link yet for "Pharyngitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="piles|hemorrhoids">
+        <button class="accordion-trigger">
+          <span class="name">Piles (Hemorrhoids)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Swollen veins in the anal region causing pain, itching, and bleeding.</p>
+            <a class="cta-icon" href="https://kushalonline.com/piles-%26-fistula" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="pivd|prolapsed intervertebral disc">
+        <button class="accordion-trigger">
+          <span class="name">PIVD (Prolapsed Intervertebral Disc)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A condition where a spinal disc bulges or slips, causing back pain and nerve compression.</p>
+            <!-- No treatment link yet for "PIVD (Prolapsed Intervertebral Disc)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="premature ejaculation">
+        <button class="accordion-trigger">
+          <span class="name">Premature Ejaculation</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A condition where ejaculation occurs earlier than desired during sexual activity.</p>
+            <!-- No treatment link yet for "Premature Ejaculation". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="primary complex">
+        <button class="accordion-trigger">
+          <span class="name">Primary Complex</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An early stage of tuberculosis infection, usually involving the lungs.</p>
+            <!-- No treatment link yet for "Primary Complex". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="prostatitis">
+        <button class="accordion-trigger">
+          <span class="name">Prostatitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the prostate gland causing pain, urinary problems, and discomfort.</p>
+            <!-- No treatment link yet for "Prostatitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="psoriasis">
+        <button class="accordion-trigger">
+          <span class="name">Psoriasis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic skin condition causing thick, red patches with silvery scales.</p>
+            <a class="cta-icon" href="https://kushalonline.com/psoriasis-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="pyelonephritis">
+        <button class="accordion-trigger">
+          <span class="name">Pyelonephritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A bacterial kidney infection causing fever, pain, and urinary symptoms.</p>
+            <!-- No treatment link yet for "Pyelonephritis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="R">
+      <h2 class="letter-heading">R</h2>
+
+      <div class="accordion-item" data-name="restless leg syndrome">
+        <button class="accordion-trigger">
+          <span class="name">Restless Leg Syndrome</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A neurological condition causing an uncontrollable urge to move the legs, usually due to discomfort, especially at night.</p>
+            <!-- No treatment link yet for "Restless Leg Syndrome". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="rheumatoid arthritis">
+        <button class="accordion-trigger">
+          <span class="name">Rheumatoid Arthritis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An autoimmune disorder where the immune system attacks joints, causing pain, swelling, and stiffness.</p>
+            <a class="cta-icon" href="https://kushalonline.com/rheumatoid-arthritis-1" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="S">
+      <h2 class="letter-heading">S</h2>
+
+      <div class="accordion-item" data-name="sciatica">
+        <button class="accordion-trigger">
+          <span class="name">Sciatica</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Nerve pain radiating from the lower back down the leg, often due to nerve compression.</p>
+            <!-- No treatment link yet for "Sciatica". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="scurf">
+        <button class="accordion-trigger">
+          <span class="name">Scurf</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A severe form of dandruff with excessive flaking of the scalp.</p>
+            <!-- No treatment link yet for "Scurf". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="seborrheic dermatitis">
+        <button class="accordion-trigger">
+          <span class="name">Seborrheic Dermatitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An inflammatory skin condition caused by Seborrhoea, leading to redness, itching and flaky (dandruff like) skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#a77e6850-2849-47d5-9a90-f0986f45cdf6" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="sinusitis">
+        <button class="accordion-trigger">
+          <span class="name">Sinusitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the sinuses causing congestion, facial pain, and headache.</p>
+            <a class="cta-icon" href="https://kushalonline.com/allergies-%26-sinusitis" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="stress">
+        <button class="accordion-trigger">
+          <span class="name">Stress</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A state of mental or physical strain affecting overall health and well-being.</p>
+            <!-- No treatment link yet for "Stress". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="stye">
+        <button class="accordion-trigger">
+          <span class="name">Stye</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A painful, pus-filled swelling on the eyelid caused by infection.</p>
+            <!-- No treatment link yet for "Stye". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="T">
+      <h2 class="letter-heading">T</h2>
+
+      <div class="accordion-item" data-name="tinea alba|pityriasis alba">
+        <button class="accordion-trigger">
+          <span class="name">Tinea Alba (Pityriasis Alba)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A mild fungal skin infection causing light-colored patches, usually on the face or arms.</p>
+            <!-- No treatment link yet for "Tinea Alba (Pityriasis Alba)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="tinea corporis">
+        <button class="accordion-trigger">
+          <span class="name">Tinea Corporis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A fungal infection of the body causing ring-shaped, itchy skin rashes.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#6acf8fc5-6e00-45e8-a18c-21f6a8803f8c" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="tinea versicolor|pityriasis versicolor">
+        <button class="accordion-trigger">
+          <span class="name">Tinea Versicolor (Pityriasis Versicolor)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A common fungal infection causing discolored patches on the skin, especially on the chest and back.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#2202160e-c84e-4c35-9dea-6163b3c4b163" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="tonsillitis">
+        <button class="accordion-trigger">
+          <span class="name">Tonsillitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Inflammation of the tonsils causing sore throat, pain on swallowing, and fever.</p>
+            <!-- No treatment link yet for "Tonsillitis". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="trigeminal neuralgia">
+        <button class="accordion-trigger">
+          <span class="name">Trigeminal Neuralgia</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A nerve disorder causing sudden, severe facial pain along the trigeminal nerve.</p>
+            <!-- No treatment link yet for "Trigeminal Neuralgia". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="typhoid">
+        <button class="accordion-trigger">
+          <span class="name">Typhoid</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A bacterial infection causing prolonged fever, weakness, and abdominal symptoms, usually spread through contaminated food and water.</p>
+            <!-- No treatment link yet for "Typhoid". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="U">
+      <h2 class="letter-heading">U</h2>
+
+      <div class="accordion-item" data-name="ulcerative colitis">
+        <button class="accordion-trigger">
+          <span class="name">Ulcerative Colitis</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A chronic inflammatory condition of the colon causing diarrhea, abdominal pain, and bleeding.</p>
+            <a class="cta-icon" href="https://kushalonline.com/ibs-%26-colitis#9a1b6b37-70da-4ea0-9ddc-97738bc59e25" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="urinary tract infection|uti">
+        <button class="accordion-trigger">
+          <span class="name">Urinary Tract Infection (UTI)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An infection of the urinary system causing burning urination, urgency, and discomfort.</p>
+            <!-- No treatment link yet for "Urinary Tract Infection (UTI)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="urticaria">
+        <button class="accordion-trigger">
+          <span class="name">Urticaria</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>An allergic skin condition causing sudden, itchy, raised swellings (hives) on the skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#b36fe704-750e-4ce8-8b82-94a1f7736f2f" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="V">
+      <h2 class="letter-heading">V</h2>
+
+      <div class="accordion-item" data-name="varicose veins">
+        <button class="accordion-trigger">
+          <span class="name">Varicose Veins</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Enlarged, twisted veins (usually in the legs) causing pain, swelling, and heaviness.</p>
+            <!-- No treatment link yet for "Varicose Veins". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="vertigo">
+        <button class="accordion-trigger">
+          <span class="name">Vertigo</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A sensation of spinning or dizziness due to inner ear or balance disorders.</p>
+            <!-- No treatment link yet for "Vertigo". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="vitiligo|leucoderma|white patches">
+        <button class="accordion-trigger">
+          <span class="name">Vitiligo (Leucoderma, White Patches)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A skin condition causing loss of pigment, leading to white patches on the skin.</p>
+            <a class="cta-icon" href="https://kushalonline.com/vitiligo-treatment" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="vocal cord nodules">
+        <button class="accordion-trigger">
+          <span class="name">Vocal Cord Nodules</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Benign growths on the vocal cords causing hoarseness and voice strain.</p>
+            <!-- No treatment link yet for "Vocal Cord Nodules". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="letter-card" data-letter="W">
+      <h2 class="letter-heading">W</h2>
+
+      <div class="accordion-item" data-name="warts">
+        <button class="accordion-trigger">
+          <span class="name">Warts</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Viral skin growths caused by HPV, appearing as rough, raised lesions.</p>
+            <a class="cta-icon" href="https://kushalonline.com/skin-%26-hair#98c38ebf-6024-4b0c-aecd-7f36f4d6938a" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="weight loss|obesity">
+        <button class="accordion-trigger">
+          <span class="name">Weight Loss (Obesity)</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>Excess body weight due to abnormal fat accumulation affecting overall health.</p>
+            <!-- No treatment link yet for "Weight Loss (Obesity)". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" data-name="writer's cramp">
+        <button class="accordion-trigger">
+          <span class="name">Writer's Cramp</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-panel">
+          <div class="panel-inner">
+            <p>A task-specific muscle disorder causing hand pain and difficulty while writing.</p>
+            <!-- No treatment link yet for "Writer's Cramp". Add the URL and uncomment to enable the link button:
+            <a class="cta-icon" href="" aria-label="View treatment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
+</div>
+
+<script>
+  // A-Z block collapse: tapping the search box minimizes the letter grid to
+  // one row; a chevron button lets the user expand/collapse it manually too
+  var azBlock = document.getElementById('azBlock');
+  var azToggle = document.getElementById('azToggle');
+  var azToggleLabel = document.getElementById('azToggleLabel');
+  var azGridWrap = document.getElementById('azGridWrap');
+  var azGrid = document.getElementById('azGrid');
+  var searchInputEl = document.getElementById('searchInput');
+
+  function setAzCollapsed(collapsed){
+    if(collapsed){
+      var firstBtn = azGrid.querySelector('.az-btn');
+      var rowHeight = firstBtn ? firstBtn.getBoundingClientRect().height : 60;
+      // include the grid's row gap so the row isn't clipped at the bottom
+      var gap = parseFloat(getComputedStyle(azGrid).rowGap || 0);
+      azGridWrap.style.maxHeight = (rowHeight + gap) + 'px';
+    } else {
+      azGridWrap.style.maxHeight = '';
+    }
+    azBlock.classList.toggle('collapsed', collapsed);
+    azToggleLabel.textContent = collapsed ? 'Show all letters' : 'Collapse';
+    azToggle.setAttribute('aria-label', collapsed ? 'Expand alphabet list' : 'Collapse alphabet list');
+  }
+
+  searchInputEl.addEventListener('focus', function(){
+    setAzCollapsed(true);
+    var activeBtn = document.querySelector('.az-btn.active');
+    if(activeBtn){
+      activeBtn.classList.remove('active');
+      switchTo(null);
+    }
+  });
+  azToggle.addEventListener('click', function(){
+    setAzCollapsed(!azBlock.classList.contains('collapsed'));
+  });
+  window.addEventListener('resize', function(){
+    if(azBlock.classList.contains('collapsed')){ setAzCollapsed(true); }
+  });
+
+  // letter grid: tap a letter -> snappy crossfade, stage height locked to the
+  // outgoing card's height during the swap so layout never collapses/jumps
+  var azButtons = document.querySelectorAll('.az-btn:not(.disabled)');
+  var letterCards = document.querySelectorAll('.letter-card');
+  var stage = document.getElementById('glossary');
+  var FADE_MS = 160;    // snappy fade duration (matches .letter-card transition)
+  var HEIGHT_MS = 200;  // stage height morph duration (matches .card-stage transition)
+
+  function switchTo(target){
+    var current = stage.querySelector('.letter-card.show');
+
+    // lock stage at its current rendered height so nothing jumps
+    stage.style.height = stage.offsetHeight + 'px';
+    void stage.offsetHeight; // force reflow
+
+    if(current){
+      current.classList.remove('visible');
+      // fold back any expanded condition descriptions before it hides
+      current.querySelectorAll('.accordion-item.open').forEach(function(item){
+        item.classList.remove('open');
+      });
+    }
+
+    setTimeout(function(){
+      if(current){ current.classList.remove('show'); }
+
+      if(target){
+        target.classList.add('show');
+        // measure target's natural height while stage is still locked
+        var targetHeight = target.scrollHeight;
+        stage.style.height = targetHeight + 'px';
+        void target.offsetWidth;
+        requestAnimationFrame(function(){ target.classList.add('visible'); });
+      } else {
+        stage.style.height = '0px';
+      }
+
+      // release the fixed height back to auto once settled, so content
+      // like the condition accordion can still expand the stage naturally
+      setTimeout(function(){ stage.style.height = ''; }, HEIGHT_MS);
+    }, current ? FADE_MS : 0);
+  }
+
+  azButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var letter = btn.getAttribute('data-letter');
+      var alreadyActive = btn.classList.contains('active');
+
+      azButtons.forEach(function(b){ b.classList.remove('active'); });
+
+      if(alreadyActive){
+        switchTo(null);
+      } else {
+        btn.classList.add('active');
+        switchTo(document.querySelector('.letter-card[data-letter="'+letter+'"]'));
+      }
+    });
+  });
+
+  // condition accordion toggle
+  document.querySelectorAll('.accordion-trigger').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+
+  // search: reveals matching letter cards regardless of A-Z selection, expands matches
+  var input = document.getElementById('searchInput');
+  var clearBtn = document.getElementById('clearBtn');
+  var noResults = document.getElementById('noResults');
+
+  function runSearch(){
+    var q = input.value.trim().toLowerCase();
+    clearBtn.style.display = q ? 'block' : 'none';
+    stage.style.height = ''; // let search-driven multi-card display size naturally
+    azButtons.forEach(function(b){ b.classList.remove('active'); }); // typing always clears letter selection
+
+    if(!q){
+      // reset to folded state, nothing forced open
+      letterCards.forEach(function(c){ c.classList.remove('show'); c.classList.remove('visible'); });
+      azButtons.forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.accordion-item').forEach(function(i){
+        i.style.display = '';
+        i.classList.remove('open');
+      });
+      noResults.style.display = 'none';
+      return;
+    }
+
+    var anyVisible = false;
+    letterCards.forEach(function(section){
+      var sectionHasMatch = false;
+      section.querySelectorAll('.accordion-item').forEach(function(item){
+        var terms = item.getAttribute('data-name').split('|');
+        var match = terms.some(function(term){ return term.trim().indexOf(q) === 0; });
+        item.style.display = match ? '' : 'none';
+        item.classList.remove('open'); // search results show name only, never auto-expand description
+        if(match){
+          sectionHasMatch = true;
+          anyVisible = true;
+        }
+      });
+      section.classList.toggle('show', sectionHasMatch);
+      section.classList.toggle('visible', sectionHasMatch);
+    });
+
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  }
+
+  input.addEventListener('input', runSearch);
+  clearBtn.addEventListener('click', function(){
+    input.value = '';
+    runSearch();
+    input.focus();
+  });
+</script>
+</body>
+</html>
